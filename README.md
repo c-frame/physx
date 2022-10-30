@@ -7,7 +7,7 @@ A-Frame physics using PhysX - based on an [original implementation by Zach Capal
 
 Implements the a physics system using an emscripten compiled PhysX engine.
 
-If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](https://vartiste.xyz/docs.html#physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
+If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#Component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```
 <a-scene physx="autoLoad: true">
@@ -19,7 +19,7 @@ If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will 
 </a-scene>
 ```
 
-If you want a little more control over how things behave, you can set the [`physx-material`](https://vartiste.xyz/docs.html#physx-material) component on the objects in your simulation, or use [`physx-joint`s](https://vartiste.xyz/docs.html#physx-joint), [`physx-constraint`s](https://vartiste.xyz/docs.html#physx-constraint) and [`physx-driver`s](https://vartiste.xyz/docs.html#physx-driver) to add some complexity to your scene.
+If you want a little more control over how things behave, you can set the [`physx-material`](#Component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#Component-physx-joint), [`physx-constraint`s](#Component-physx-constraint) and [`physx-driver`s](#Component-physx-driver) to add some complexity to your scene.
 
 If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
 
@@ -27,7 +27,7 @@ If you need more low-level control, the PhysX bindings are exposed through the `
    let myGeometry = new this.el.sceneEl.PhysX.PxCapsuleGeometry(1.0, 2.0)
 ```
 
-The system uses [my fork](https://github.com/zach-capalbo/PhysX) of PhysX, built using the [Docker Wrapper](https://github.com/ashconnell/physx-js). To see what's exposed to JavaScript, see [PxWebBindings.cpp](https://github.com/zach-capalbo/PhysX/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp)
+The system uses [Zach Capalbo's fork](https://github.com/zach-capalbo/PhysX) of PhysX, built using the [Docker Wrapper](https://github.com/ashconnell/physx-js). To see what's exposed to JavaScript, see [PxWebBindings.cpp](https://github.com/zach-capalbo/PhysX/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp)
 
 For a complete example of how to use this, you can see the [aframe-vartiste-toolkit Physics Playground](https://glitch.com/edit/#!/fascinated-hip-period?path=index.html)
 
@@ -81,7 +81,7 @@ For instance, in the following scene fragment:
 | staticFriction     | number | 0.2            | Static friction                                              |
 | dynamicFriction    | number | 0.2            | Dynamic friction                                             |
 | restitution        | number | 0.2            | Restitution, or "bounciness"                                 |
-| density            | number |                | Density for the shape. If densities are specified for *all* shapes in a rigid body, then the rigid body's mass properties will be automatically calculated based on the different densities. However, if density information is not specified for every shape, then the mass defined in the overarching [`physx-body`](https://vartiste.xyz/docs.html#physx-body) will be used instead. |
+| density            | number |                | Density for the shape. If densities are specified for *all* shapes in a rigid body, then the rigid body's mass properties will be automatically calculated based on the different densities. However, if density information is not specified for every shape, then the mass defined in the overarching [`physx-body`](#physx-body) will be used instead. |
 | collisionLayers    | array  | [1]            | Which collision layers this shape is present on              |
 | collidesWithLayers | array  | [ 1, 2, 3, 4 ] | Array containing all layers that this shape should collide with |
 | collisionGroup     | number | 0              | If `collisionGroup` is greater than 0, this shape will *not* collide with any other shape with the same `collisionGroup` value |
@@ -118,14 +118,6 @@ Visible meshes can be excluded from this shape generation process by setting the
 ```
 
 Note, in such cases that if you are setting material properties on individual shapes, then the property should go on the collision mesh entity
-
-**Use with the [Manipulator](https://vartiste.xyz/docs.html#manipulator) component**
-
-If a dynamic entity is grabbed by the [Manipulator](https://vartiste.xyz/docs.html#manipulator) component, it will temporarily become a kinematic object. This means that collisions will no longer impede its movement, and it will track the manipulator exactly, (subject to any manipulator constraints, such as [`manipulator-weight`](https://vartiste.xyz/docs.html#manipulator-weight)). If you would rather have the object remain dynamic, you will need to [redirect the grab](https://vartiste.xyz/docs.html#redirect-grab) to a `physx-joint` instead, or even easier, use the [`dual-wieldable`](https://vartiste.xyz/docs.html#dual-wieldable) component.
-
-As soon as the dynamic object is released, it will revert back to a dynamic object. Objects with the type `kinematic` will remain kinematic.
-
-Static objects should not be moved. If a static object can be the target of a manipulator grab (or any other kind of movement), it should be `kinematic` instead.
 
 ### physx-body Schema
 
@@ -184,7 +176,7 @@ This can only be used on an entity with a `physx-joint` component. Currently onl
 
 ## Component `physx-joint-constraint` 
 
-Adds a constraint to a [`physx-joint`](https://vartiste.xyz/docs.html#physx-joint). Currently only **D6** joints are supported.
+Adds a constraint to a [`physx-joint`](#Component-physx-joint). Currently only **D6** joints are supported.
 
 Can only be used on an entity with the `physx-joint` component. You can set multiple constraints per joint. Note that in order to specify attributes of individual axes, you will need to use multiple constraints. For instance:
 
@@ -233,7 +225,7 @@ The position and rotation of the `physx-joint` will be used to create the corres
 
 **Stapler Example**
 
-Here's a simplified version of the stapler from the [physics playground demo](https://vartiste.xyz/docs.html)
+Here's a simplified version of the stapler from the [physics playground demo]()
 
 ```
 <a-entity id="stapler">
