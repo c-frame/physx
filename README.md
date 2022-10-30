@@ -258,3 +258,12 @@ Notice the joint is created between the top part of the stapler (which contains 
 
 
 
+
+
+## Acknowledgements
+
+This repository is based on an original implementation of A-Frame physics using PhysX by [Zach Capalbo](https://vartiste.xyz/docs.html#physics.js)
+
+Simplification into a standalone codebase by [Lee Stemkoski](https://stemkoski.github.io/A-Frame-Examples/)
+
+

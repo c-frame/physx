@@ -1,13 +1,14 @@
 // This is a modification of the physics/PhysX libraries
+//   created by Lee Stemkoski
 //   from the VARTISTE project @ https://vartiste.xyz/ 
 //   by Zachary Capalbo https://github.com/zach-capalbo/vartiste
 // with the goal of creating a simplified standalone codebase.
+// Further performance modifications by Diarmid Mackenzie.
 
 // original documentation: https://vartiste.xyz/docs.html#physics.js
 
 // Came via: https://github.com/stemkoski/A-Frame-Examples/blob/66f05fe5cf89879996f1f6a4c0475ce475e8796a/js/physics.js
 // and then via: https://github.com/diarmidmackenzie/christmas-scene/blob/a94ae7e7167937f10d34df8429fb71641e343bb1/lib/physics.js
-
 // ======================================================================
 
 // patching in Pool functions
