@@ -1,6 +1,10 @@
 # physx
 A-Frame physics using PhysX - based on an [original implementation by Zach Capalbo](https://vartiste.xyz/docs.html#physics.js)
 
+For examples of usage, see:
+
+[Examples](examples/README.md)
+
 
 
 ## System `physx` 
