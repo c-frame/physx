@@ -19,7 +19,7 @@ If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will 
 </a-scene>
 ```
 
-If you want a little more control over how things behave, you can set the [`physx-material`](#Component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#Component-physx-joint), [`physx-constraint`s](#Component-physx-constraint) and [`physx-driver`s](#Component-physx-driver) to add some complexity to your scene.
+If you want a little more control over how things behave, you can set the [`physx-material`](#Component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#Component-physx-joint), [`physx-joint-constraint`s](#Component-physx-joint-constraint) and [`physx-joint-driver`s](#Component-physx-joint-driver) to add some complexity to your scene.
 
 If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
 
