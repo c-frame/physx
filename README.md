@@ -11,7 +11,7 @@ For examples of usage, see:
 
 Implements the a physics system using an emscripten compiled PhysX engine.
 
-If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#Component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
+If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```
 <a-scene physx="autoLoad: true">
@@ -23,7 +23,7 @@ If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will 
 </a-scene>
 ```
 
-If you want a little more control over how things behave, you can set the [`physx-material`](#Component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#Component-physx-joint), [`physx-joint-constraint`s](#Component-physx-joint-constraint) and [`physx-joint-driver`s](#Component-physx-joint-driver) to add some complexity to your scene.
+If you want a little more control over how things behave, you can set the [`physx-material`](#component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#component-physx-joint), [`physx-joint-constraint`s](#component-physx-joint-constraint) and [`physx-joint-driver`s](#component-physx-joint-driver) to add some complexity to your scene.
 
 If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
 
@@ -85,7 +85,7 @@ For instance, in the following scene fragment:
 | staticFriction     | number | 0.2            | Static friction                                              |
 | dynamicFriction    | number | 0.2            | Dynamic friction                                             |
 | restitution        | number | 0.2            | Restitution, or "bounciness"                                 |
-| density            | number |                | Density for the shape. If densities are specified for *all* shapes in a rigid body, then the rigid body's mass properties will be automatically calculated based on the different densities. However, if density information is not specified for every shape, then the mass defined in the overarching [`physx-body`](#physx-body) will be used instead. |
+| density            | number |                | Density for the shape. If densities are specified for *all* shapes in a rigid body, then the rigid body's mass properties will be automatically calculated based on the different densities. However, if density information is not specified for every shape, then the mass defined in the overarching [`physx-body`](#component-physx-body) will be used instead. |
 | collisionLayers    | array  | [1]            | Which collision layers this shape is present on              |
 | collidesWithLayers | array  | [ 1, 2, 3, 4 ] | Array containing all layers that this shape should collide with |
 | collisionGroup     | number | 0              | If `collisionGroup` is greater than 0, this shape will *not* collide with any other shape with the same `collisionGroup` value |
@@ -180,7 +180,7 @@ This can only be used on an entity with a `physx-joint` component. Currently onl
 
 ## Component `physx-joint-constraint` 
 
-Adds a constraint to a [`physx-joint`](#Component-physx-joint). Currently only **D6** joints are supported.
+Adds a constraint to a [`physx-joint`](#component-physx-joint). Currently only **D6** joints are supported.
 
 Can only be used on an entity with the `physx-joint` component. You can set multiple constraints per joint. Note that in order to specify attributes of individual axes, you will need to use multiple constraints. For instance:
 
@@ -265,5 +265,4 @@ Notice the joint is created between the top part of the stapler (which contains 
 This repository is based on an original implementation of A-Frame physics using PhysX by [Zach Capalbo](https://vartiste.xyz/docs.html#physics.js)
 
 Simplification into a standalone codebase by [Lee Stemkoski](https://stemkoski.github.io/A-Frame-Examples/)
-
 
