@@ -7,6 +7,34 @@ For examples of usage, see:
 
 
 
+## Installation
+
+There are 2 modules that you will need: `physics.js` and `physics.release.js`.
+
+The URL for the main physX wasm code is specified on the `physx` component schema - but the default settings should work for most cases.
+
+### Installation via Script Tags
+
+You can either download the modules from the `src`  directory of this repo and include them like this:
+
+```
+<script src="physx.release.js"></script>
+<script src="physics.js"></script>
+```
+
+Or you can download via JSDelivr CDN (specifying the version number you want to use)
+
+```
+<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physx.release.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physics.js"></script>
+```
+
+### Installation via npm
+
+Not supported yet - if you want this, please raise an issue.  PRs also welcome!
+
+
+
 ## System `physx` 
 
 Implements the a physics system using an emscripten compiled PhysX engine.
@@ -39,18 +67,18 @@ It is also helpful to refer to the [NVIDIA PhysX documentation](https://gamework
 
 ### physx Schema
 
-| Property              | Type    | Default                 | Description                                                  |
-| --------------------- | ------- | ----------------------- | ------------------------------------------------------------ |
-| delay                 | number  | 5000                    | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
-| throttle              | number  | 10                      | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
-| autoLoad              | boolean | false                   | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
-| speed                 | number  | 1                       | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
-| wasmUrl               | string  |                         | URL for the PhysX WASM bundle. If blank, it will be auto-located based on the VARTISTE toolkit include path |
-| useDefaultScene       | boolean | true                    | If true, sets up a default scene with a ground plane and bounding cylinder. |
-| wrapBounds            | boolean | false                   | NYI                                                          |
-| groundCollisionLayers | string  |                         | Which collision layers the ground belongs to                 |
-| groundCollisionMask   | string  |                         | Which collision layers will collide with the ground          |
-| gravity               | vec3    | { x: 0, y: -9.8, z: 0 } | Global gravity vector                                        |
+| Property              | Type    | Default                                                      | Description                                                  |
+| --------------------- | ------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| delay                 | number  | 5000                                                         | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
+| throttle              | number  | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
+| autoLoad              | boolean | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
+| speed                 | number  | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
+| wasmUrl               | string  | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
+| useDefaultScene       | boolean | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
+| wrapBounds            | boolean | false                                                        | NYI                                                          |
+| groundCollisionLayers | string  |                                                              | Which collision layers the ground belongs to                 |
+| groundCollisionMask   | string  |                                                              | Which collision layers will collide with the ground          |
+| gravity               | vec3    | { x: 0, y: -9.8, z: 0 }                                      | Global gravity vector                                        |
 
 ### physx Methods
 

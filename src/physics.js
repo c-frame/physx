@@ -328,9 +328,8 @@ AFRAME.registerSystem('physx', {
     // down simulation time
     speed: {default: 1.0},
 
-    // URL for the PhysX WASM bundle. If blank, it will be auto-located based on
-    // the VARTISTE toolkit include path
-    wasmUrl: {default: ""},
+    // URL for the PhysX WASM bundle.
+    wasmUrl: {default: "https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm"},
 
     // If true, sets up a default scene with a ground plane and bounding
     // cylinder.
@@ -383,14 +382,7 @@ AFRAME.registerSystem('physx', {
     })
   },
   findWasm() {
-    if (this.data.wasmUrl) return this.data.wasmUrl;
-
-    let path = require('./wasm/physx.release.wasm');
-    if (window.VARTISTE_TOOLKIT_URL) {
-      return `${window.VARTISTE_TOOLKIT_URL}/${path}`
-    }
-
-    return path
+    return this.data.wasmUrl;
   },
   // Loads PhysX and starts the simulation
   async startPhysX() {
@@ -399,11 +391,8 @@ AFRAME.registerSystem('physx', {
     let resolveInitialized;
     let initialized = new Promise((r, e) => resolveInitialized = r)
     PhysX = PHYSX({
-        locateFile(path) {
-          if (path.endsWith('.wasm')) {
+        locateFile() {
             return self.findWasm()
-          }
-          return path
         },
         onRuntimeInitialized() {
           resolveInitialized();
