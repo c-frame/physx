@@ -1,7 +1,12 @@
 AFRAME.registerComponent('physx-grab', {
   init: function () {
 
-    this.GRABBED_STATE = 'grabbed';
+    // If a state of "grabbed" is set on a physx-body entity, 
+    // the entity is automatically transformed into a kinematic entity.
+    // To avoid triggering this (we want to grab using constraints, and leave the
+    // body as dynamic), we use a non-clashing name for the state we set on the entity when
+    // grabbing it.
+    this.GRABBED_STATE = 'grabbed-dynamic';
 
     this.grabbing = false;
     this.hitEl =      /** @type {AFRAME.Element}    */ null;
@@ -70,7 +75,7 @@ AFRAME.registerComponent('physx-grab', {
 
     this.joint = document.createElement('a-entity') 
     this.joint.setAttribute("physx-joint", `type: D6; target: #${target.id}`)
-    this.joint.setAttribute("physx-joint-constraint", "lockedAxes: x y z; linearLimit: 0 0")
+    this.joint.setAttribute("physx-joint-constraint", "lockedAxes: x, y, z; linearLimit: 0 0")
 
     el.appendChild(this.joint)
   },
