@@ -17,8 +17,7 @@ AFRAME.registerComponent('physx-grab', {
 
   play: function () {
     var el = this.el;
-    el.addEventListener('collide', this.onHitCannon);
-    el.addEventListener('collidestart', this.onHitAmmo);
+    el.addEventListener('contactbegin', this.onHit);
     el.addEventListener('gripdown', this.onGripClose);
     el.addEventListener('gripup', this.onGripOpen);
     el.addEventListener('trackpaddown', this.onGripClose);
@@ -29,8 +28,7 @@ AFRAME.registerComponent('physx-grab', {
 
   pause: function () {
     var el = this.el;
-    el.removeEventListener('collide', this.onHitCannon);
-    el.removeEventListener('collidestart', this.onHitAmmo);
+    el.removeEventListener('contactbegin', this.onHit);
     el.removeEventListener('gripdown', this.onGripClose);
     el.removeEventListener('gripup', this.onGripOpen);
     el.removeEventListener('trackpaddown', this.onGripClose);
@@ -49,20 +47,13 @@ AFRAME.registerComponent('physx-grab', {
     if (!hitEl) { return; }
     hitEl.removeState(this.GRABBED_STATE);
 
-    if (this.driver === "cannon") {
-      this.system.removeConstraint(this.constraint);
-      this.constraint = null;
-    }
-    else {
-      // Ammo
-      this.hitEl.removeAttribute(`ammo-constraint__${this.el.id}`)
-    }
     this.hitEl = undefined;
-    
+
+    this.removeJoint()
   },
 
   onHit: function (evt) {
-    var hitEl = evt.detail.targetEl;
+    var hitEl = evt.detail.otherComponent.el;
     // If the element is already grabbed (it could be grabbed by another controller).
     // If the hand is not grabbing the element does not stick.
     // If we're already grabbing something you can't grab again.
@@ -70,24 +61,24 @@ AFRAME.registerComponent('physx-grab', {
     hitEl.addState(this.GRABBED_STATE);
     this.hitEl = hitEl;
 
-    this.addJoint(hitEl, this.el)
+    this.addJoint(hitEl, evt.target)
   },
 
   addJoint(el, target) {
 
-    if (this.joint) {
-      removeJoint(joint)
-    }
+    this.removeJoint()
 
     this.joint = document.createElement('a-entity') 
-    this.joint.setAttribute("physx-joint", `target: ${target.el.id}`)
-    this.joint.setAttribute("physx-joint-constraint", "lockedAxes: xyz, linearLimit: 0 0")
+    this.joint.setAttribute("physx-joint", `type: D6; target: #${target.id}`)
+    this.joint.setAttribute("physx-joint-constraint", "lockedAxes: x y z; linearLimit: 0 0")
 
-    this.el.appendChild(this.joint)
+    el.appendChild(this.joint)
   },
 
-  removeJoint(joint) {
+  removeJoint() {
 
-    joint.parentEl.removeChild(joint)
+    if (!this.joint) return
+    this.joint.parentElement.removeChild(this.joint)
+    this.joint = null
   }
 });
