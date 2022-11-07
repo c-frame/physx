@@ -25,8 +25,8 @@ You can either download the modules from the `src`  directory of this repo and i
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physx.release.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physics.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/src/physx.release.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/src/physics.js"></script>
 ```
 
 ### Installation via npm
@@ -39,7 +39,7 @@ Not supported yet - if you want this, please raise an issue.  PRs also welcome!
 
 Implements the a physics system using an emscripten compiled PhysX engine.
 
-If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
+If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```
 <a-scene physx="autoLoad: true">
@@ -133,7 +133,7 @@ Turns an entity into a PhysX rigid body. This is the main component for creating
 There are 3 types of supported rigid bodies. The type can be set by using the `type` proeprty, but once initialized cannot be changed.
 
 - `dynamic` objects are objects that will have physics simulated on them. The entity's world position, scale, and rotation will be used as the starting condition for the simulation, however once the simulation starts the entity's position and rotation will be replaced each frame with the results of the simulation.
-- `static` objects are objects that cannot move. They cab be used to create collidable objects for `dynamic` objects, or for anchor points for joints.
+- `static` objects are objects that cannot move. They can be used to create collidable objects for `dynamic` objects, or for anchor points for joints.
 - `kinematic` objects are objects that can be moved programmatically, but will not be moved by the simulation. They can however, interact with and collide with dynamic objects. Each frame, the entity's `object3D` will be used to set the position and rotation for the simulation object.
 
 **Shapes**
@@ -245,7 +245,7 @@ In the above example, the box will be able to move from -1 to 20 in both the x a
 
 Creates a PhysX joint between an ancestor rigid body and a target rigid body.
 
-The physx-joint is designed to be used either on or within an entity with the `physx-body` component. For instance:
+The `physx-joint` is designed to be used either on or within an entity with the `physx-body` component. For instance:
 
 ```
 <a-entity physx-body="type: dynamic">
@@ -269,7 +269,7 @@ Here's a simplified version of the stapler from the [physics playground demo]()
 </a-entity>
 ```
 
-Notice the joint is created between the top part of the stapler (which contains the joint) and the bottom part of the stapler at the position of the `physx-joint` component's entitiy. This will be the pivot point for the stapler's rotation.
+Notice the joint is created between the top part of the stapler (which contains the joint) and the bottom part of the stapler at the position of the `physx-joint` component's entity. This will be the pivot point for the stapler's rotation.
 
 ![Stapler with joint highlighted](https://vartiste.xyz/bce1dc6210d4b9aa9db6.png)
 
