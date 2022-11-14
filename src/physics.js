@@ -11,8 +11,9 @@
 // and then via: https://github.com/diarmidmackenzie/christmas-scene/blob/a94ae7e7167937f10d34df8429fb71641e343bb1/lib/physics.js
 // ======================================================================
 
-// patching in Pool functions
+let PHYSX = require('./physx.release.js');
 
+// patching in Pool functions
 var poolSize = 0
 
 function sysPool(name, type) {

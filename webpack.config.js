@@ -16,6 +16,13 @@ module.exports = {
     filename: 'physics.js'
   },
 
+  resolve: {
+    fallback: {
+        "fs": false,
+        "path": false
+    },
+  },
+
   // Default mode for Webpack is production.
   // Depending on mode Webpack will apply different things
   // on the final bundle. For now, we don't need production's JavaScript 
