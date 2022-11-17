@@ -39,10 +39,13 @@ Clone this repo, and run
 
 `npm install`
 
-To build, run:
+To run for development purposes, run: 
+
+`npm run dev` or `npm start`
+
+To build (both development & production builds), run:
 
 `npm run dist`
-
 
 
 ## System `physx` 
