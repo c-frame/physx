@@ -23,6 +23,12 @@ module.exports = {
     },
   },
 
+  devServer: {
+    static: {
+      directory: path.join(__dirname, ''),
+    }
+  },
+
   // Default mode for Webpack is production.
   // Depending on mode Webpack will apply different things
   // on the final bundle. For now, we don't need production's JavaScript 
