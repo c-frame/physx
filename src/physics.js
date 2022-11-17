@@ -394,6 +394,12 @@ AFRAME.registerSystem('physx', {
     this.statsToEvents = this.data.stats.includes("events")
     this.statsToPanel = this.data.stats.includes("panel")
 
+    this.bodyTypeToStatsPropertyMap = {
+      "static": "staticBodies",
+      "dynamic": "dynamicBodies",
+      "kinematic": "kinematicBodies",
+    }
+
     if (this.statsToConsole || this.statsToEvents || this.statsToPanel) {
       this.trackPerf = true;
       this.tickCounter = 0;
@@ -793,24 +799,8 @@ AFRAME.registerSystem('physx', {
     this.objects.forEach((pxBody, object3D) => {
       const el = object3D.el
       const type = el.components['physx-body'].data.type
-
-      switch(type) {
-        case 'static':
-          statsData.staticBodies++ 
-          break;
-
-        case 'dynamic':
-          statsData.dynamicBodies++ 
-          break;
-
-        case 'kinematic':
-          statsData.kinematicBodies++ 
-          break;
-        
-        default:
-          console.error("Unexpected body type:", type)
-          break;
-      }
+      const property = this.bodyTypeToStatsPropertyMap[type]
+      statsData[property]++
     })
   },
 })
