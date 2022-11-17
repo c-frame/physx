@@ -781,32 +781,29 @@ AFRAME.registerSystem('physx', {
     statsData.staticBodies = 0
     statsData.kinematicBodies = 0
     statsData.dynamicBodies = 0
-    
-    /*
-    function type(el) {
-      return el.components['ammo-body'].data.type
-    }
 
-    this.driver.els.forEach((el) => {
+    this.objects.forEach((pxBody, object3D) => {
+      const el = object3D.el
+      const type = el.components['physx-body'].data.type
 
-      switch(type(el)) {
-        case TYPE.STATIC:
+      switch(type) {
+        case 'static':
           statsData.staticBodies++ 
           break;
 
-        case TYPE.DYNAMIC:
+        case 'dynamic':
           statsData.dynamicBodies++ 
           break;
 
-        case TYPE.KINEMATIC:
+        case 'kinematic':
           statsData.kinematicBodies++ 
           break;
         
         default:
-          console.error("Unexpected body type:", type(el))
+          console.error("Unexpected body type:", type)
           break;
       }
-    })*/
+    })
   },
 })
 
