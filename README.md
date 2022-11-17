@@ -15,23 +15,33 @@ The URL for the main physX wasm code is specified on the `physx` component schem
 
 ### Installation via Script Tags
 
-You can either download the modules from the `src`  directory of this repo and include them like this:
+You can either download the module from the `dist`  directory of this repo and include them like this:
 
 ```
-<script src="physx.release.js"></script>
-<script src="physics.js"></script>
+<script src="physx.js"></script>
 ```
 
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/src/physx.release.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/src/physics.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/dist/physx.min.js"></script>
 ```
 
 ### Installation via npm
 
 Not supported yet - if you want this, please raise an issue.  PRs also welcome!
+
+
+
+## Build
+
+Clone this repo, and run
+
+`npm install`
+
+To build, run:
+
+`npm run dist`
 
 
 
