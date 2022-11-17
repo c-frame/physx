@@ -26,7 +26,23 @@ module.exports = {
   devServer: {
     static: {
       directory: path.join(__dirname, ''),
-    }
+    },
+
+    onListening: function (devServer) {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+      const brightYellow = "\x1b[1m\x1b[33m"
+      const underscoreCyan = "\x1b[4m\x1b[36m"
+      const reset = "\x1b[0m"
+
+      const port = devServer.server.address().port;
+      console.log(brightYellow)
+      console.log("***********************************************************************");
+      console.log(`*   View examples at ${underscoreCyan}http://localhost:${port}/examples${reset}${brightYellow}                   *`);
+      console.log("***********************************************************************");
+      console.log(reset)
+    },
   },
 
   // Default mode for Webpack is production.
