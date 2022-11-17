@@ -347,6 +347,9 @@ AFRAME.registerSystem('physx', {
 
     // Global gravity vector
     gravity: {type: 'vec3', default: {x: 0, y: -9.8, z: 0}},
+
+    // Whether to output stats, and how to output them.  One or more of "console", "events", "panel"
+    stats: {type: 'array', default: []}
   },
   init() {
     this.PhysXUtil = PhysXUtil;
@@ -374,6 +377,8 @@ AFRAME.registerSystem('physx', {
       this.fulfillPhysXPromise = r;
     })
 
+    this.initStats()
+
     this.el.addEventListener('inspectortoggle', (e) => {
       console.log("Inspector toggle", e)
       if (e.detail === true)
@@ -381,6 +386,67 @@ AFRAME.registerSystem('physx', {
           this.running = false
       }
     })
+  },
+
+  initStats() {
+    // Data used for performance monitoring.
+    this.statsToConsole = this.data.stats.includes("console")
+    this.statsToEvents = this.data.stats.includes("events")
+    this.statsToPanel = this.data.stats.includes("panel")
+
+    if (this.statsToConsole || this.statsToEvents || this.statsToPanel) {
+      this.trackPerf = true;
+      this.tickCounter = 0;
+      this.statsTickData = {};
+      this.statsBodyData = {};
+
+      const scene = this.el.sceneEl;
+      scene.setAttribute("stats-collector", `inEvent: physics-tick-data;
+                                             properties: engine, after, total;
+                                             outputFrequency: 100;
+                                             outEvent: physics-tick-summary;
+                                             outputs: percentile__50, percentile__90, max`);
+    }
+
+    if (this.statsToPanel) {
+      const scene = this.el.sceneEl;
+      const space = "&nbsp&nbsp&nbsp"
+    
+      scene.setAttribute("stats-panel", "")
+      scene.setAttribute("stats-group__bodies", `label: Physics Bodies`)
+      scene.setAttribute("stats-row__b1", `group: bodies;
+                                           event:physics-body-data;
+                                           properties: staticBodies;
+                                           label: Static`)
+      scene.setAttribute("stats-row__b2", `group: bodies;
+                                           event:physics-body-data;
+                                           properties: dynamicBodies;
+                                           label: Dynamic`)
+      scene.setAttribute("stats-row__b3", `group: bodies;
+                                           event:physics-body-data;
+                                           properties: kinematicBodies;
+                                           label: Kinematic`)
+      scene.setAttribute("stats-group__tick", `label: Physics Ticks: Median${space}90th % ${space} Max`)
+      scene.setAttribute("stats-row__1", `group: tick; 
+                                          event:physics-tick-summary; 
+                                          properties: engine.percentile__50, 
+                                                      engine.percentile__90, 
+                                                      engine.max;
+                                          label: Engine`)
+      scene.setAttribute("stats-row__2", `group: tick;
+                                          event:physics-tick-summary;
+                                          properties: after.percentile__50, 
+                                                      after.percentile__90, 
+                                                      after.max; 
+                                          label: After`)
+
+      scene.setAttribute("stats-row__3", `group: tick;
+                                          event:physics-tick-summary;
+                                          properties: total.percentile__50, 
+                                                      total.percentile__90, 
+                                                      total.max;
+                                          label: Total`)
+    }
   },
   findWasm() {
     return this.data.wasmUrl;
@@ -662,16 +728,13 @@ AFRAME.registerSystem('physx', {
     if (!this.physXInitialized) return
     if (!this.running) return
 
-    const startTime = Date.now();
+    const engineStartTime = performance.now();
 
     this.scene.simulate(THREE.MathUtils.clamp(dt * this.data.speed / 1000, 0, 0.03 * this.data.speed), true)
     //this.scene.simulate(0.02, true) // (experiment with fixed interval)
     this.scene.fetchResults(true)
 
-    const engineEndTime = Date.now();
-    this.cumTimeEngine += engineEndTime;
-    this.cumTimeEngine -= startTime;
-    this.tickCounter++;
+    const engineEndTime = performance.now();
 
     for (let [obj, body] of this.objects)
     {
@@ -685,20 +748,66 @@ AFRAME.registerSystem('physx', {
         Util.positionObject3DAtTarget(obj, this.worldHelper);
     }
 
-    const wrapperEndTime = Date.now();
-    this.cumTimeWrapper += wrapperEndTime;
-    this.cumTimeWrapper -= engineEndTime;
+    if (this.trackPerf) {
+      const afterEndTime = performance.now();
 
-    if (this.tickCounter === 100) {
-        console.log(`Avg. physics tick duration (engine): ${this.cumTimeEngine / 100} msecs`);
-        console.log(`Avg. physics tick duration (wrapper): ${this.cumTimeWrapper / 100} msecs`);
-        this.el.emit("physics-tick-timer", {engine: this.cumTimeEngine / 100,
-                                            wrapper: this.cumTimeWrapper / 100})
+      this.statsTickData.engine = engineEndTime - engineStartTime
+      this.statsTickData.after = afterEndTime - engineEndTime
+      this.statsTickData.total = afterEndTime - engineStartTime
+      this.el.emit("physics-tick-data", this.statsTickData)
+
+      this.tickCounter++;
+
+      if (this.tickCounter === 100) {
+
+        this.countBodies()
+
+        if (this.statsToConsole) {
+          console.log("Physics tick stats:", this.statsData)
+        }
+
+        if (this.statsToEvents || this.statsToPanel) {
+          this.el.emit("physics-body-data", this.statsBodyData)
+        }
+
         this.tickCounter = 0;
-        this.cumTimeEngine = 0;
-        this.cumTimeWrapper = 0;
+      }
     }
-  }
+  },
+
+  countBodies() {
+
+    const statsData = this.statsBodyData
+    statsData.staticBodies = 0
+    statsData.kinematicBodies = 0
+    statsData.dynamicBodies = 0
+    
+    /*
+    function type(el) {
+      return el.components['ammo-body'].data.type
+    }
+
+    this.driver.els.forEach((el) => {
+
+      switch(type(el)) {
+        case TYPE.STATIC:
+          statsData.staticBodies++ 
+          break;
+
+        case TYPE.DYNAMIC:
+          statsData.dynamicBodies++ 
+          break;
+
+        case TYPE.KINEMATIC:
+          statsData.kinematicBodies++ 
+          break;
+        
+        default:
+          console.error("Unexpected body type:", type(el))
+          break;
+      }
+    })*/
+  },
 })
 
 // Controls physics properties for individual shapes or rigid bodies. You can
@@ -1867,3 +1976,41 @@ AFRAME.registerComponent('gltf-entities', {
     }
   }
 })
+
+class StatTracker {
+  constructor(cycles = 100, dps = 2) {
+    this.cycles = cycles
+    this.dps = dps
+    this.reset()
+  }
+
+  reset() {
+    this.max = 0
+    this.min = Infinity
+    this.cumulative = 0
+    this.counter = 0
+  }
+
+  record(value) {
+    this.cumulative += value
+    if (value > this.max) {
+      this.max = value
+    }
+    if (value < this.min) {
+      this.min = value
+    }
+    this.counter++
+  }
+
+  get avg() {
+    // Average will only be valid if we have recorded the correct number of cycles.
+    console.assert(this.counter === this.cycles)
+    return this.cumulative / this.cycles
+  }
+
+  get report() {
+    return { avg: this.avg.toFixed(this.dps),
+             max: this.max.toFixed(this.dps),
+             min: this.min.toFixed(this.dps) }
+  }
+}

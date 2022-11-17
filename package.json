@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/c-frame/physx#readme",
   "dependencies": {
-    "aframe-stats-panel": "^0.1.2",
+    "aframe-stats-panel": "^0.2.1",
     "webpack": "^5.75.0"
   },
   "devDependencies": {
