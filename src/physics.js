@@ -432,7 +432,7 @@ AFRAME.registerSystem('physx', {
                                            event:physics-body-data;
                                            properties: kinematicBodies;
                                            label: Kinematic`)
-      scene.setAttribute("stats-group__tick", `label: Physics Ticks: Median${space}90th % ${space} Max`)
+      scene.setAttribute("stats-group__tick", `label: Physics Ticks: Median${space}90th%${space}99th%`)
       scene.setAttribute("stats-row__1", `group: tick; 
                                           event:physics-tick-summary; 
                                           properties: engine.percentile__50, 
