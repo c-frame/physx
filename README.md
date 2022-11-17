@@ -9,9 +9,9 @@ For examples of usage, see:
 
 ## Installation
 
-There are 2 modules that you will need: `physics.js` and `physics.release.js`.
+There is just one main JS module, `physx.js`, which triggers download of a specified additional wasm module.
 
-The URL for the main physX wasm code is specified on the `physx` component schema - but the default settings should work for most cases.
+The URL for the PhysX wasm module is specified on the `physx` component schema - but the default settings should work for most cases.
 
 ### Installation via Script Tags
 
