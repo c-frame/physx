@@ -43,6 +43,8 @@ To run for development purposes, run:
 
 `npm run dev` or `npm start`
 
+Examples can be viewed at /examples
+
 To build (both development & production builds), run:
 
 `npm run dist`
@@ -80,18 +82,19 @@ It is also helpful to refer to the [NVIDIA PhysX documentation](https://gamework
 
 ### physx Schema
 
-| Property              | Type    | Default                                                      | Description                                                  |
-| --------------------- | ------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| delay                 | number  | 5000                                                         | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
-| throttle              | number  | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
-| autoLoad              | boolean | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
-| speed                 | number  | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
-| wasmUrl               | string  | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
-| useDefaultScene       | boolean | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
-| wrapBounds            | boolean | false                                                        | NYI                                                          |
-| groundCollisionLayers | string  |                                                              | Which collision layers the ground belongs to                 |
-| groundCollisionMask   | string  |                                                              | Which collision layers will collide with the ground          |
-| gravity               | vec3    | { x: 0, y: -9.8, z: 0 }                                      | Global gravity vector                                        |
+| Property              | Type             | Default                                                      | Description                                                  |
+| --------------------- | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| delay                 | number           | 5000                                                         | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
+| throttle              | number           | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
+| autoLoad              | boolean          | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
+| speed                 | number           | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
+| wasmUrl               | string           | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
+| useDefaultScene       | boolean          | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
+| wrapBounds            | boolean          | false                                                        | NYI                                                          |
+| groundCollisionLayers | string           |                                                              | Which collision layers the ground belongs to                 |
+| groundCollisionMask   | string           |                                                              | Which collision layers will collide with the ground          |
+| gravity               | vec3             | { x: 0, y: -9.8, z: 0 }                                      | Global gravity vector                                        |
+| stats                 | array of strings |                                                              | Where to output performance stats (if any), `panel`, `console`, `events` (or some combination). <br />- `panel` output stats to a panel similar to the A-Frame stats panel.<br />-`events` generates `physics-tick-timer` events, which can be processed externally.<br/> -`console`outputs stats to the console. |
 
 ### physx Methods
 
@@ -296,6 +299,21 @@ Notice the joint is created between the top part of the stapler (which contains 
 | removeElOnBreak   | boolean  | false            | If true, removes the entity containing this component when the joint is broken. |
 | collideWithTarget | boolean  | false            | If false, collision will be disabled between the rigid body containing the joint and the target rigid body. |
 | softFixed         | boolean  | false            | When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things |
+
+
+
+## Statistics
+
+The following statistics are available from PhysX.  Each of these is refreshed every 100 ticks (i.e. every 100 frames).
+
+| Statistic | Meaning                                                      |
+| --------- | ------------------------------------------------------------ |
+| Static    | The number of static bodies being handled by the physics engine. |
+| Dynamic   | The number of dynamic bodies being handled by the physics engine. |
+| Kinematic | The number of kinematic bodies being handled by the physics engine. |
+| After     | The number of milliseconds per tick after invoking the physics engine.  Typically this is the time taken to synchronize the physics engine state into the scene, e.g. movements of dynamic bodies.<br />Median = median value in the last 100 ticks<br />90th % = 90th percentile value in the last 100 ticks<br />99th % = maximum recorded value over the last 100 ticks.<br />Note that unlike the physics implementations in aframe-physics-system, PhysX has no significant per-frame processing before invoking the physics engine, so the "after" statistic accounts for all the work done outside the PhysX WASM code. |
+| Engine    | The number of milliseconds per tick actually running the physics engine.<br />Reported as Median / 90th / 99th percentiles, as above. |
+| Total     | The total number of milliseconds of physics processing per tick: Engine + After.  Reported as Median / 90th / 99th percentiles, as above. |
 
 
 
