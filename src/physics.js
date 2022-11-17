@@ -777,6 +777,14 @@ AFRAME.registerSystem('physx', {
 
   countBodies() {
 
+    // Aditional statistics beyond simple body counts should be possible.
+    // They could be accessed via PxScene::getSimulationStatistics()
+    // https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/Statistics.html
+    // https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxSimulationStatistics.html
+    // However this part of the API is not yet exposed in the
+    // WASM PhysX build we are using
+    // See: https://github.com/zach-capalbo/PhysX/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp
+    
     const statsData = this.statsBodyData
     statsData.staticBodies = 0
     statsData.kinematicBodies = 0
