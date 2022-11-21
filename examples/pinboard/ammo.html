@@ -7,7 +7,7 @@
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>    
     <script src="https://mixedreality.mozilla.org/ammo.js/builds/ammo.wasm.js"></script>
     <!-- special build of Ammo that includes timing data.-->
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/christmas-scene@main/lib/aframe-physics-system.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/aframe-physics-system@extra-perf-stats/dist/aframe-physics-system.js"></script>
     <script src="./pinboard.js"></script>
     <link rel="stylesheet" href="../../styles.css">
   </head>
@@ -17,26 +17,22 @@
       href="https://github.com/c-frame/physx/blob/main/examples/pinboard/ammo.html">
       view code
     </a>
-    <div style = "font-size: 40px; padding: 20px">
-        Ammo Average tick (msecs):
-        <div id="tickTimer">
-            measuring...
-        </div>
-    </div>
-    <a-scene physics="driver: ammo"
-             tick-time-display="outputEl: #tickTimer; sceneOutputEl: #tickTimerScene">
+    <a-scene physics="driver: ammo; stats: panel"
+             tick-time-display="sceneOutputEl: #tickTimerScene">
         <a-entity id="pinboard" pinboard="physics: ammo; height:20; width: 20" position = "0 0 -20" rotation = "45 0 0">
         </a-entity>
 
-        <a-entity id="pinboard" ball-recycler="physics: ammo; ballCount: 100; width: 15; depth: 15; yKill: -8" position="0 8 -20">
+        <a-entity id="ball-recycler" ball-recycler="physics: ammo; ballCount: 100; width: 15; depth: 15; yKill: -8" position="0 8 -20">
         </a-entity>
 
         <a-plane id="tickTimerScene"
-          position="0 12 -20"
+          position="0 15 -30"
           width="30"
-          height="2"
+          height="10"
           color="black"
-          text="value: Average tick (msecs): measuring...; wrapCount: 40; zOffset: 0.01">
+          text="font:sourcecodepro;
+                value: Physics Tick Length (msecs)  (over 100 ticks)\n--------------- Median --- 90th % --- Max --
+                       measuring...\n\n\n\n; wrapCount: 45; zOffset: 0.01">
         </a-plane>
     </a-scene>
   </body>
