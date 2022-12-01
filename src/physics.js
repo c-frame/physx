@@ -1055,6 +1055,7 @@ AFRAME.registerComponent('physx-body', {
     if (!oldData || this.data.mass !== oldData.mass) this.el.emit('object3dset', {})
   },
   remove() {
+    if (!this.rigidBody) return;
     this.system.removeBody(this)
   },
   createGeometry(o) {
