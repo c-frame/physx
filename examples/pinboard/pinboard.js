@@ -65,7 +65,8 @@ AFRAME.registerComponent('dynamic-ball', {
 
   init() {
       const el = this.el
-      el.setAttribute('radius', 0.3)
+      // Set geometry rather than radius - see: https://github.com/aframevr/aframe/issues/5203
+      el.setAttribute('geometry', 'radius: 0.3')
 
       if (this.data.physics === "ammo") {
           el.setAttribute('ammo-body', 'type:dynamic')
@@ -82,7 +83,8 @@ AFRAME.registerComponent('dynamic-ball', {
           el.setAttribute('physx-body', 'type:dynamic')
       }
       
-      el.setAttribute('color', 'yellow')
+      // Set material rather than color - see: https://github.com/aframevr/aframe/issues/5203
+      el.setAttribute('material', 'color: yellow')
   },
 
   tick() {
