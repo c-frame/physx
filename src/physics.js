@@ -1052,6 +1052,12 @@ AFRAME.registerComponent('physx-body', {
       }
     }
 
+    if (this.data.type === 'kinematic') {
+      if(this.data.highPrecision){
+        this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eENABLE_SPECULATIVE_CCD, true);
+      }
+    }
+
     if (!oldData || this.data.mass !== oldData.mass) this.el.emit('object3dset', {})
   },
   remove() {
