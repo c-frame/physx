@@ -9,24 +9,22 @@ For examples of usage, see:
 
 ## Installation
 
-There are 2 modules that you will need: `physics.js` and `physics.release.js`.
+There is just one main JS module, `physx.js`, which triggers download of a specified additional wasm module.
 
-The URL for the main physX wasm code is specified on the `physx` component schema - but the default settings should work for most cases.
+The URL for the PhysX wasm module is specified on the `physx` component schema - but the default settings should work for most cases.
 
 ### Installation via Script Tags
 
-You can either download the modules from the `src`  directory of this repo and include them like this:
+You can either download the module from the `dist`  directory of this repo and include them like this:
 
 ```
-<script src="physx.release.js"></script>
-<script src="physics.js"></script>
+<script src="physx.js"></script>
 ```
 
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physx.release.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/c-frame@latest/src/physics.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/dist/physx.min.js"></script>
 ```
 
 ### Installation via npm
@@ -35,11 +33,28 @@ Not supported yet - if you want this, please raise an issue.  PRs also welcome!
 
 
 
+## Build
+
+Clone this repo, and run
+
+`npm install`
+
+To run for development purposes, run: 
+
+`npm run dev` or `npm start`
+
+Examples can be viewed at /examples
+
+To build (both development & production builds), run:
+
+`npm run dist`
+
+
 ## System `physx` 
 
 Implements the a physics system using an emscripten compiled PhysX engine.
 
-If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
+If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```
 <a-scene physx="autoLoad: true">
@@ -67,18 +82,19 @@ It is also helpful to refer to the [NVIDIA PhysX documentation](https://gamework
 
 ### physx Schema
 
-| Property              | Type    | Default                                                      | Description                                                  |
-| --------------------- | ------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| delay                 | number  | 5000                                                         | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
-| throttle              | number  | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
-| autoLoad              | boolean | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
-| speed                 | number  | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
-| wasmUrl               | string  | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
-| useDefaultScene       | boolean | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
-| wrapBounds            | boolean | false                                                        | NYI                                                          |
-| groundCollisionLayers | string  |                                                              | Which collision layers the ground belongs to                 |
-| groundCollisionMask   | string  |                                                              | Which collision layers will collide with the ground          |
-| gravity               | vec3    | { x: 0, y: -9.8, z: 0 }                                      | Global gravity vector                                        |
+| Property              | Type             | Default                                                      | Description                                                  |
+| --------------------- | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| delay                 | number           | 5000                                                         | Amount of time to wait after loading before starting the physics. Can be useful if there is still some things loading or initializing elsewhere in the scene |
+| throttle              | number           | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
+| autoLoad              | boolean          | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
+| speed                 | number           | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
+| wasmUrl               | string           | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
+| useDefaultScene       | boolean          | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
+| wrapBounds            | boolean          | false                                                        | NYI                                                          |
+| groundCollisionLayers | string           |                                                              | Which collision layers the ground belongs to                 |
+| groundCollisionMask   | string           |                                                              | Which collision layers will collide with the ground          |
+| gravity               | vec3             | { x: 0, y: -9.8, z: 0 }                                      | Global gravity vector                                        |
+| stats                 | array of strings |                                                              | Where to output performance stats (if any), `panel`, `console`, `events` (or some combination). <br />- `panel` output stats to a panel similar to the A-Frame stats panel.<br />-`events` generates `physics-tick-timer` events, which can be processed externally.<br/> -`console`outputs stats to the console. |
 
 ### physx Methods
 
@@ -133,7 +149,7 @@ Turns an entity into a PhysX rigid body. This is the main component for creating
 There are 3 types of supported rigid bodies. The type can be set by using the `type` proeprty, but once initialized cannot be changed.
 
 - `dynamic` objects are objects that will have physics simulated on them. The entity's world position, scale, and rotation will be used as the starting condition for the simulation, however once the simulation starts the entity's position and rotation will be replaced each frame with the results of the simulation.
-- `static` objects are objects that cannot move. They cab be used to create collidable objects for `dynamic` objects, or for anchor points for joints.
+- `static` objects are objects that cannot move. They can be used to create collidable objects for `dynamic` objects, or for anchor points for joints.
 - `kinematic` objects are objects that can be moved programmatically, but will not be moved by the simulation. They can however, interact with and collide with dynamic objects. Each frame, the entity's `object3D` will be used to set the position and rotation for the simulation object.
 
 **Shapes**
@@ -245,7 +261,7 @@ In the above example, the box will be able to move from -1 to 20 in both the x a
 
 Creates a PhysX joint between an ancestor rigid body and a target rigid body.
 
-The physx-joint is designed to be used either on or within an entity with the `physx-body` component. For instance:
+The `physx-joint` is designed to be used either on or within an entity with the `physx-body` component. For instance:
 
 ```
 <a-entity physx-body="type: dynamic">
@@ -269,7 +285,7 @@ Here's a simplified version of the stapler from the [physics playground demo]()
 </a-entity>
 ```
 
-Notice the joint is created between the top part of the stapler (which contains the joint) and the bottom part of the stapler at the position of the `physx-joint` component's entitiy. This will be the pivot point for the stapler's rotation.
+Notice the joint is created between the top part of the stapler (which contains the joint) and the bottom part of the stapler at the position of the `physx-joint` component's entity. This will be the pivot point for the stapler's rotation.
 
 ![Stapler with joint highlighted](https://vartiste.xyz/bce1dc6210d4b9aa9db6.png)
 
@@ -283,6 +299,21 @@ Notice the joint is created between the top part of the stapler (which contains 
 | removeElOnBreak   | boolean  | false            | If true, removes the entity containing this component when the joint is broken. |
 | collideWithTarget | boolean  | false            | If false, collision will be disabled between the rigid body containing the joint and the target rigid body. |
 | softFixed         | boolean  | false            | When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things |
+
+
+
+## Statistics
+
+The following statistics are available from PhysX.  Each of these is refreshed every 100 ticks (i.e. every 100 frames).
+
+| Statistic | Meaning                                                      |
+| --------- | ------------------------------------------------------------ |
+| Static    | The number of static bodies being handled by the physics engine. |
+| Dynamic   | The number of dynamic bodies being handled by the physics engine. |
+| Kinematic | The number of kinematic bodies being handled by the physics engine. |
+| After     | The number of milliseconds per tick after invoking the physics engine.  Typically this is the time taken to synchronize the physics engine state into the scene, e.g. movements of dynamic bodies.<br />Median = median value in the last 100 ticks<br />90th % = 90th percentile value in the last 100 ticks<br />99th % = maximum recorded value over the last 100 ticks.<br />Note that unlike the physics implementations in aframe-physics-system, PhysX has no significant per-frame processing before invoking the physics engine, so the "after" statistic accounts for all the work done outside the PhysX WASM code. |
+| Engine    | The number of milliseconds per tick actually running the physics engine.<br />Reported as Median / 90th / 99th percentiles, as above. |
+| Total     | The total number of milliseconds of physics processing per tick: Engine + After.  Reported as Median / 90th / 99th percentiles, as above. |
 
 
 

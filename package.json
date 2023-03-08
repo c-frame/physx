@@ -1,0 +1,44 @@
+{
+  "name": "@c-frame/physx",
+  "version": "0.1.0",
+  "description": "Physics for A-Frame using Nvidia PhysX",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "npx webpack serve",
+    "dist": "npm run dist:dev && npm run dist:prod",
+    "dist:dev": "webpack --config webpack.config.js",
+    "dist:prod": "webpack --config webpack.prod.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c-frame/physx.git"
+  },
+  "keywords": [
+    "physics",
+    "A-Frame",
+    "aframe",
+    "threejs",
+    "webXR",
+    "physx"
+  ],
+  "author": "Diarmid Mackenzie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/c-frame/physx/issues"
+  },
+  "homepage": "https://github.com/c-frame/physx#readme",
+  "dependencies": {
+    "aframe-stats-panel": "^0.2.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-merge": "^5.8.0"
+  }
+}
