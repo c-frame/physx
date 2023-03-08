@@ -4,11 +4,10 @@
 <head>
 	<title>A-Frame: Physics</title>
 	<meta name="description" content="A-Frame Physics">
-  <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
-  <script src="../../src/physx.release.js"></script>
-  <script src="../../src/physics.js"></script>
+  <script src="../../dist/physx.js"></script>
   <script src="../components/force-pushable.js"></script>
   <script src="../components/grab.js"></script>
 
@@ -27,7 +26,7 @@
   </a>
   <a-scene stats="true"
            environment
-           physx="autoLoad: true; delay: 1000; useDefaultScene: false;">
+           physx="autoLoad: true; delay: 1000; useDefaultScene: false;stats: panel">
     <!-- Player -->
     <a-entity id="player">
       <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0">
