@@ -22,8 +22,6 @@ AFRAME.registerComponent('physx-force-pushable', {
 
   forcePushPhysX: function (e) {
 
-    if(!PhysX) return;
-
     const el = this.el
     if (!el.components['physx-body']) return
     const body = el.components['physx-body'].rigidBody
@@ -34,8 +32,8 @@ AFRAME.registerComponent('physx-force-pushable', {
     force.normalize();
 
     // not sure about units, but force seems stronger with PhysX than Cannon, so scaling down
-    // by a factor of 5.
-    force.multiplyScalar(this.data.force / 5);
+    // by a factor of 3.
+    force.multiplyScalar(this.data.force / 3);
 
     // use data from intersection to determine point at which to apply impulse.
     const pos = this.pos
