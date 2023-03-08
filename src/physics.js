@@ -79,7 +79,7 @@ Util.positionObject3DAtTarget = function(obj, target, {scale, transformOffset, t
 {
   if (typeof transformRoot === 'undefined') transformRoot = obj.parent
 
-  target.updateMatrixWorld()
+  target.updateWorldMatrix()
   let destMat = this.pool('dest', THREE.Matrix4)
   destMat.copy(target.matrixWorld)
 
@@ -98,8 +98,7 @@ Util.positionObject3DAtTarget = function(obj, target, {scale, transformOffset, t
 
   let invMat = this.pool('inv', THREE.Matrix4)
 
-  // This seems to be unecessary, and kills performance....
-  //transformRoot.updateMatrixWorld()
+  transformRoot.updateWorldMatrix()
   invMat.copy(transformRoot.matrixWorld).invert()
   destMat.premultiply(invMat)
 
