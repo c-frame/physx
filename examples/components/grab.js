@@ -74,8 +74,7 @@ AFRAME.registerComponent('physx-grab', {
     this.removeJoint()
 
     this.joint = document.createElement('a-entity') 
-    this.joint.setAttribute("physx-joint", `type: D6; target: #${target.id}`)
-    this.joint.setAttribute("physx-joint-constraint", "lockedAxes: x, y, z; linearLimit: 0 0")
+    this.joint.setAttribute("physx-joint", `type: Fixed; target: #${target.id}`)
 
     el.appendChild(this.joint)
   },
