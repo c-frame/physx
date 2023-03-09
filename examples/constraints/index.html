@@ -4,7 +4,7 @@
     <meta name="description" content="A-Frame Physics - Consraints">
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls@0.4.3/dist/aframe-blink-controls.min.js"></script>
     <script src="../../dist/physx.js"></script>
     <script src="../components/force-pushable.js"></script>
     <script src="../components/grab.js"></script>
@@ -34,7 +34,7 @@
             material="color: #FF4444; shader: flat">
           </a-entity>
         </a-entity>
-       <a-entity id="left-hand" hand-controls="hand: left" blink-controls physx-grab>
+        <a-entity id="left-hand" hand-controls="hand: left" blink-controls physx-grab>
           <a-sphere id="left-hand-collider" 
                     radius="0.02"
                     visible="false"
