@@ -16,6 +16,7 @@ AFRAME.registerComponent('physx-force-pushable', {
     this.sourceEl = this.el.sceneEl.querySelector('[camera]');
     this.el.addEventListener('click', this.forcePushPhysX.bind(this));
 
+    this.sourcePosition = new THREE.Vector3();
     this.force = new THREE.Vector3();
     this.pos = new THREE.Vector3();
   },
@@ -28,12 +29,19 @@ AFRAME.registerComponent('physx-force-pushable', {
     if (!body) return
 
     const force = this.force
-    force.copy(el.object3D.position)
+    const source = this.sourcePosition
+    
+    // WebXR requires care getting camera position https://github.com/mrdoob/three.js/issues/18448
+    source.setFromMatrixPosition( this.sourceEl.object3D.matrixWorld );
+
+    el.object3D.getWorldPosition(force)
+    force.sub(source)
+    
     force.normalize();
 
     // not sure about units, but force seems stronger with PhysX than Cannon, so scaling down
-    // by a factor of 3.
-    force.multiplyScalar(this.data.force / 3);
+    // by a factor of 5.
+    force.multiplyScalar(this.data.force / 5);
 
     // use data from intersection to determine point at which to apply impulse.
     const pos = this.pos
