@@ -1,5 +1,9 @@
 /**
  * Force Pushable component.
+ * 
+ * Based on an original component by Don McCurdy in aframe-physics-system
+ * 
+ * Copyright (c) 2016 Don McCurdy
  *
  * Applies behavior to the current entity such that cursor clicks will apply a
  * strong impulse, pushing the entity away from the viewer.

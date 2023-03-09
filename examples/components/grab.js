@@ -1,3 +1,11 @@
+/**
+ * Grab component.
+ * 
+ * Based on an original component by Don McCurdy in aframe-physics-system
+ * 
+ * Copyright (c) 2016 Don McCurdy
+ */
+
 AFRAME.registerComponent('physx-grab', {
   init: function () {
 
