@@ -7,7 +7,7 @@ This set of examples is based on [these examples from aframe-physics-system](htt
 | Example                                                      | Status                                                       |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Basic example of some objects in a scene using PhysX         | [**OK**](https://c-frame.github.io/physx/examples/basic/index.html) |
-| Construct a [compound shape](https://c-frame.github.io/aframe-physics-system/#shape) and simulate collision with a ground plane. | To create                                                    |
+| Construct a [compound shape](https://c-frame.github.io/aframe-physics-system/#shape) and simulate collision with a ground plane. | [**OK**](https://c-frame.github.io/physx/examples/compound/index.html) |
 | Demonstration of many PhysX constraints including Fixed, Revolute, Spherical and Prismatic constraints. | [**OK**](https://c-frame.github.io/physx/examples/constraints/index.html) |
 | Bounce simulation with [restitution (bounciness)](https://c-frame.github.io/aframe-physics-system/#system-configuration) of 1. | [**OK**](https://c-frame.github.io/physx/examples/materials/index.html) |
 | Four vertical [springs](https://c-frame.github.io/aframe-physics-system/#spring) each between two boxes with an assortment of damping and stiffness values | To create                                                    |

@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no,maximum-scale=1">
+    <title>Examples • Compound PhysX</title>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MozillaReality/ammo.js@8bbc0ea/builds/ammo.wasm.js"></script>
+    <script src="../../dist/physx.js"></script>
+    <script src="../components/force-pushable.js"></script>
+    <script src="../components/grab.js"></script>
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <div class="text-overlay">
+      <p>Compound shape, using the PhysX driver.</p>
+      <p>Click when the red reticle is over the sphere to apply a force to it.</p>
+    </div>
+        <a class="code-link"
+        target="_blank"
+        href="https://github.com/c-frame/physx/blob/master/examples/compound/index.html">
+        view code
+    </a>
+    <a-scene environment physx="autoLoad: true; delay: 1000; useDefaultScene: false">
+      <!-- Player -->
+      <a-entity camera look-controls wasd-controls position="0 1.6 0">
+        <a-entity cursor
+                  raycaster="objects:[physx-force-pushable]"
+                  position="0 0 -0.5"
+                  geometry="primitive: circle; radius: 0.01; segments: 4;"
+                  material="color: #FF4444; shader: flat"></a-entity>
+      </a-entity>
+      <a-entity id="left-hand" ammo-body="type: kinematic; emitCollisionEvents: true" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.02;" 
+                hand-controls="hand: left" grab></a-entity>
+      <a-entity id="right-hand" ammo-body="type: kinematic; emitCollisionEvents: true" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.02;"
+                hand-controls="hand: right" grab></a-entity>      
+
+      <!-- Terrain -->
+      <a-box width="75" height="0.1" depth="75" physx-body="type: static" visible="false"></a-box>
+
+      <!-- Compound Shape -->
+      <a-entity physx-body physx-force-pushable position="0 4 -2" >
+        <!-- appearance only -->
+        <a-sphere radius="0.25" color="red" physx-no-collision>  
+        </a-sphere>
+        <!-- physics shape -->
+        <!-- These could be set to visible: false.  Set to wireframe display for demonstration purposes-->
+        <a-cylinder radius="0.24" height="0.36"
+                    physx-force-pushable
+                    material="wireframe:true"
+                    physx-hidden-collision>
+        </a-cylinder>
+        <a-box width="0.3"
+                height="0.36"
+                depth="0.08"
+                position="0.4 0 0"
+                physx-force-pushable
+                material="wireframe:true"
+                physx-hidden-collision>
+        </a-box>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
