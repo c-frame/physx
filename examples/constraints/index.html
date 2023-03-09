@@ -16,7 +16,7 @@
       <p>Demonstration of many PhysX constraints including cone
         twist, hinge, lock, point to point, and slider constraints.</p>
       <p>Click when the red reticle is over a red object to apply a force to it.</p>
-      <p>NOTE: Work In Progress, mostly doesn't work yet!</p>
+      <p>NOTE: Linear constraints for slider are not yet implemented</p>
     </div>
         <a class="code-link"
         target="_blank"
@@ -146,14 +146,13 @@
                physx-force-pushable>
         <a-entity physx-joint="type: Spherical; target:#conetwist-target; collideWithTarget: true"
                   position="-0.125 0.125 -0.125">
-     </a-entity>
-
+        </a-entity>
         </a-box>
-      </a-entity>-->
+      </a-entity>
 
       <!-- SLIDER -->
-      <!--<a-entity position="-4 0 -1">
-        <a-text value="Slider" position="0 1.5 0" align="center"></a-text>
+      <a-entity position="-4 0 -1">
+        <a-text value="Slider\n(Prismatic)" position="0 1.5 0" align="center"></a-text>
         <a-sphere id="slider-target"
                radius="0.125"
                position="-0.5 1 0"
@@ -164,11 +163,14 @@
                radius="0.125"
                position="0 1 0"
                physx-body
-               force-pushable
-               ammo-constraint="type: slider; target: #slider-target">
+               physx-force-pushable>
+               <a-entity physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true">
+               </a-entity>
+               <!-- Note that we don't currently have support for slider constraints
+                    So the sphere will slide until it hits a static object -->
         </a-sphere>
         <a-cylinder radius="0.05" height="2" position="0 1 0" rotation="0 0 90"></a-cylinder>
-      </a-entity>-->
+      </a-entity>
     </a-scene>
   </body>
 </html>
