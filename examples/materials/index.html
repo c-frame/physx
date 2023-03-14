@@ -30,10 +30,20 @@
                   geometry="primitive: circle; radius: 0.01; segments: 4;"
                   material="color: #FF4444; shader: flat"></a-entity>
       </a-entity>
-      <a-entity id="left-hand" ammo-body="type: kinematic; emitCollisionEvents: true" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.02;" 
-                hand-controls="hand: left" grab></a-entity>
-      <a-entity id="right-hand" ammo-body="type: kinematic; emitCollisionEvents: true" ammo-shape="type: sphere; fit: manual; sphereRadius: 0.02;"
-                hand-controls="hand: right" grab></a-entity>    
+      <a-entity id="left-hand" hand-controls="hand: left" physx-grab>
+        <a-sphere id="left-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
+      <a-entity id="right-hand" hand-controls="hand: right" physx-grab>
+        <a-sphere id="right-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
 
       <!-- Terrain -->
       <a-box width="75" height="0.1" depth="75" physx-body="type: static"
