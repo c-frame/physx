@@ -26,7 +26,8 @@ AFRAME.registerComponent('rain-of-entities', {
   },
   spawn: function () {
     if (this.boxes.length >= this.data.maxCount) {
-      clearTimeout(this.timeout);
+      clearInterval(this.timeout);
+      this.timeout= null;
       return;
     }
 
@@ -66,5 +67,11 @@ AFRAME.registerComponent('rain-of-entities', {
     box.object3D.quaternion.identity();
     box.setAttribute("physx-body", "")
 
+  },
+
+  remove() {
+    if (this.timeout) {
+      clearInterval(this.timeout)
+    }
   }
 });
