@@ -79,7 +79,7 @@ Util.positionObject3DAtTarget = function(obj, target, {scale, transformOffset, t
 {
   if (typeof transformRoot === 'undefined') transformRoot = obj.parent
 
-  target.updateMatrixWorld()
+  target.updateWorldMatrix()
   let destMat = this.pool('dest', THREE.Matrix4)
   destMat.copy(target.matrixWorld)
 
@@ -98,8 +98,7 @@ Util.positionObject3DAtTarget = function(obj, target, {scale, transformOffset, t
 
   let invMat = this.pool('inv', THREE.Matrix4)
 
-  // This seems to be unecessary, and kills performance....
-  //transformRoot.updateMatrixWorld()
+  transformRoot.updateWorldMatrix()
   invMat.copy(transformRoot.matrixWorld).invert()
   destMat.premultiply(invMat)
 
@@ -1439,8 +1438,13 @@ AFRAME.registerComponent('physx-joint-constraint', {
 
     let llimit = () => {
       let l = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), this.data.linearLimit.x, this.data.linearLimit.y);
-      l.siffness = this.data.stiffness;
+      l.stiffness = this.data.stiffness;
       l.damping = this.data.damping;
+      // Setting stiffness automatically sets restitution to the same value.
+      // Is it correct, then to override with default restitution value of 0, even if
+      // no restitution value was specified?
+      // Not sure - but commenting out this line doesn't help with problems observed with spring behaviour.
+      // Seem spring.html example.
       l.restitution = this.data.restitution;
       return l
     }

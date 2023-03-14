@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>A-Frame: Physics</title>
+	<meta name="description" content="A-Frame Physics">
+  <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls@0.4.3/dist/aframe-blink-controls.min.js"></script>
+  <script src="../../dist/physx.js"></script>
+  <script src="../components/force-pushable.js"></script>
+  <script src="../components/grab.js"></script>
+
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <div class="text-overlay">
+    <p>Point the red reticle at a block, and click the mouse to apply a strong force to it.</p>
+    <p>Use mouse and WASD to look and move around.</p>
+  </div>
+      <a class="code-link"
+      target="_blank"
+      href="https://github.com/c-frame/physx/blob/main/examples/stress/index.html">
+      view code
+  </a>
+  <a-scene stats="true"
+           environment
+           physx="autoLoad: true; delay: 1000; useDefaultScene: false;stats: panel">
+    <!-- Player -->
+    <a-entity id="player">
+      <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0">
+        <a-entity cursor
+                  raycaster="objects:[physx-force-pushable]"
+                  position="0 0 -0.5"
+                  geometry="primitive: circle; radius: 0.01; segments: 4;"
+                  material="color: #FF4444; shader: flat"></a-entity>
+      </a-entity>
+
+      <a-entity id="left-hand" hand-controls="hand: left" blink-controls physx-grab>
+        <a-sphere id="left-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
+      <a-entity id="right-hand" hand-controls="hand: right" physx-grab>
+        <a-sphere id="right-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
+    </a-entity>
+
+    <!-- Terrain -->
+    <a-box width="75" height="0.1" depth="75" physx-body="type: static" visible="false"></a-box>
+
+    <!-- Blocks -->
+    <a-box position="0 0.5 -2" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 0.5 -2" color="#d73027" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 0.5 -2" color="#f46d43" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 0.5 -2" color="#fdae61" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 1.5 -2" color="#fee08b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 1.5 -2" color="#ffffbf" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 1.5 -2" color="#d9ef8b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 1.5 -2" color="#a6d96a" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 2.5 -2" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 2.5 -2" color="#66bd63" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 2.5 -2" color="#1a9850" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 2.5 -2" color="#006837" physx-body="type: dynamic" physx-force-pushable></a-box>
+
+    <a-box position="0 0.5 2" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 0.5 2" color="#d73027" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 0.5 2" color="#f46d43" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 0.5 2" color="#fdae61" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 1.5 2" color="#fee08b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 1.5 2" color="#ffffbf" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 1.5 2" color="#d9ef8b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 1.5 2" color="#a6d96a" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 2.5 2" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 2.5 2" color="#66bd63" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 2.5 2" color="#1a9850" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 2.5 2" color="#006837" physx-body="type: dynamic" physx-force-pushable></a-box>
+
+    <a-box position="0 0.5 4" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 0.5 4" color="#d73027" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 0.5 4" color="#f46d43" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 0.5 4" color="#fdae61" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 1.5 4" color="#fee08b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 1.5 4" color="#ffffbf" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 1.5 4" color="#d9ef8b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 1.5 4" color="#a6d96a" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 2.5 4" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 2.5 4" color="#66bd63" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 2.5 4" color="#1a9850" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 2.5 4" color="#006837" physx-body="type: dynamic" physx-force-pushable></a-box>
+
+    <a-box position="0 0.5 6" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 0.5 6" color="#d73027" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 0.5 6" color="#f46d43" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 0.5 6" color="#fdae61" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 1.5 6" color="#fee08b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 1.5 6" color="#ffffbf" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 1.5 6" color="#d9ef8b" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 1.5 6" color="#a6d96a" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="0 2.5 6" color="#a50026" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="1 2.5 6" color="#66bd63" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="2 2.5 6" color="#1a9850" physx-body="type: dynamic" physx-force-pushable></a-box>
+    <a-box position="3 2.5 6" color="#006837" physx-body="type: dynamic" physx-force-pushable></a-box>
+  </a-scene>
+</body>
+</html>

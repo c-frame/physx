@@ -1,0 +1,92 @@
+﻿<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no,maximum-scale=1">
+    <title>Examples • Spring PhysX</title>
+    <script type="text/javascript" src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="../../dist/physx.js"></script>
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <div class="text-overlay">
+      <p>Four vertical springs each between two boxes with an
+        assortment of damping and stiffness values using PhysX.</p>
+      <p>These are not working currently.  Setting damping to any value other than zero
+         seems to result in the block falling indefinitely without constraint.</p>
+    </div>
+    <!-- Setting damping to a very high value results in the block falling at a very low velocity,
+         but it still seems to follow downwards for ever.
+         My understanding of how this *should* work:
+         - Stiffness should control the extent to which positional offset affects aceleration
+         - Damping should control the extent to which non-zero velocity affects aceleration
+         https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Joints.html#soft-constraints
+
+         This doesn't seem to work, though...
+         - Setting damping to a tiny non-zero value gives radically different behaviour from zero.
+         - Setting 
+        -->
+        <a class="code-link"
+        target="_blank"
+        href="https://github.com/c-frame/physx/blob/master/examples/spring/index.html">
+        view code
+    </a>
+    <a-scene physx="autoLoad: true; delay: 1000; useDefaultScene: false" stats>
+      <a-text color="black" position="1.5 3 -3" value="damping: 0.25\nstiffness: 25"></a-text>
+      <a-box id="one" position="2 2 -3" color="blue" physx-body="type: static"></a-box>
+      <a-box position="2 1 -3"
+             color="green"
+             physx-body>
+             <a-entity physx-joint="type: D6; target: #one"
+                       physx-joint-constraint="constrainedAxes: y;
+                                               linearLimit: 0 1;
+                                               damping: 0.25;
+                                               stiffness: 25">
+             </a-entity>
+      </a-box>
+
+      <a-text color="black" position="-0.5 3 -3" value="damping: 0.75\nstiffness: 75"></a-text>
+      <a-box id="two" position="0 2 -3" color="blue" physx-body="type: static"></a-box>
+      <a-box id="onespring"
+             position="0 1 -3"
+             color="green"
+             physx-body>
+        <a-entity physx-joint="type: D6; target: #two"
+             physx-joint-constraint="constrainedAxes: y;
+                                     linearLimit: 0 1;
+                                     damping: 0.75;
+                                     stiffness: 75">
+        </a-entity>
+      </a-box>
+
+      <a-text color="black" position="-2.5 3 -3" value="damping: 1\nstiffness: 100"></a-text>
+      <a-box id="three" position="-2 2 -3" color="blue" physx-body="type: static"></a-box>
+      <a-box id="twospring"
+             position="-2 1 -3"
+             color="green"
+             physx-body>
+        <a-entity physx-joint="type: D6; target: #three"
+             physx-joint-constraint="constrainedAxes: y;
+                                     linearLimit: 0 1;
+                                     damping: 1;
+                                     stiffness: 100">
+        </a-entity>
+      </a-box>
+
+      <a-text color="black" position="4.5 3 -3" value="Spring anchor position: 1 0 0"></a-text>
+      <a-box id="four" position="5 2 -3" color="blue" physx-body="type: static"></a-box>
+      <a-box id="threespring"
+             position="5 1 -3"
+             color="green"
+             physx-body>
+        <a-entity position="1 0 0"
+             physx-joint="type: D6; target: #four"
+             physx-joint-constraint="constrainedAxes: y;
+                                     linearLimit: 0 1;
+                                     damping: 1;
+                                     stiffness: 100">
+        </a-entity>
+      </a-box>
+    </a-scene>
+  </body>
+</html>

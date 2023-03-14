@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no,user-scalable=no,maximum-scale=1">
+    <title>Examples • Materials PhysX</title>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+    <script src="../../dist/physx.js"></script>
+    <script src="../components/force-pushable.js"></script>
+    <script src="../components/grab.js"></script>
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <div class="text-overlay">
+      <p>Bounce simulation with restitution (bounciness) of 1 using the PhysX driver.</p>
+    </div>
+        <a class="code-link"
+        target="_blank"
+        href="https://github.com/c-frame/physx/blob/master/examples/materials/index.html">
+        view code
+    </a>
+    <a-scene stats="true"
+             environment
+             physx="autoLoad: true; delay: 1000; useDefaultScene: false">
+      <a-entity camera look-controls wasd-controls position="0 1.6 0">
+        <a-entity cursor
+                  raycaster="objects:[physx-force-pushable]"
+                  position="0 0 -0.5"
+                  geometry="primitive: circle; radius: 0.01; segments: 4;"
+                  material="color: #FF4444; shader: flat"></a-entity>
+      </a-entity>
+      <a-entity id="left-hand" hand-controls="hand: left" physx-grab>
+        <a-sphere id="left-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
+      <a-entity id="right-hand" hand-controls="hand: right" physx-grab>
+        <a-sphere id="right-hand-collider" 
+                  radius="0.02"
+                  visible="false"
+                  physx-body="type: kinematic; emitCollisionEvents: true">
+        </a-sphere>
+      </a-entity>
+
+      <!-- Terrain -->
+      <a-box width="75" height="0.1" depth="75" physx-body="type: static"
+             physx-material="restitution: 1"
+             visible="false"></a-box>
+
+      <!-- Blocks -->
+      <a-sphere radius="0.25" position="0 4 -2" color="red" physx-body
+                physx-material="restitution: 1"
+                physx-force-pushable></a-sphere>
+    </a-scene>
+  </body>
+</html>
