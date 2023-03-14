@@ -18,11 +18,20 @@ AFRAME.registerComponent('physx-force-pushable', {
 
     this.pStart = new THREE.Vector3();
     this.sourceEl = this.el.sceneEl.querySelector('[camera]');
-    this.el.addEventListener('click', this.forcePushPhysX.bind(this));
+    this.forcePushPhysX = this.forcePushPhysX.bind(this);
+    
 
     this.sourcePosition = new THREE.Vector3();
     this.force = new THREE.Vector3();
     this.pos = new THREE.Vector3();
+  },
+
+  play() {
+    this.el.addEventListener('click', this.forcePushPhysX);
+  },
+  
+  pause() {
+    this.el.removeEventListener('click', this.forcePushPhysX);
   },
 
   forcePushPhysX: function (e) {
