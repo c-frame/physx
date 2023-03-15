@@ -302,6 +302,30 @@ Notice the joint is created between the top part of the stapler (which contains 
 
 
 
+## Collision Events
+
+If `emitCollisionEvents` is set of a `physx-body` then `contactbegin` and `contactend` events are emitted on that entity when it collides with other bodies.
+
+---------
+
+Note the important restriction that **SDK state changes are not permitted from an event callback** ([full details here](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/Simulation.html#callback-sequence)).  This means that you should never add / remove / modify bodies, materials, joints, etc. directly from a collision event callback.
+
+If you need to make such changes in response to a collision event, you can use setTimeout() with a zero timer to delay the update until the physics processing for this tick has completed.
+
+--------
+
+These events include a `detail` object with the following properties:
+
+| Property       | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| thisShape      | A `PxShape` for the shape within this body involved in the collision.  This can be used to look up the `physx-body` that owns the shape using `this.shapeMap` on the `phsyx` component on the scene.  For a compound shape, there is currently no way to map this back to a specific object3D that corresponds to the shape in question. |
+| otherShape     | A `PxShape` for the shape within the other body involved in the collision.  See row above for what can be done with this. |
+| points         | The set of contact points, a `PxVec3Vector`.  Read length from `points.size()`, then access using `points.get(index)` for each index < `size`, which returns a JS object with properties x, y & z (like a THREE.Vector3, but not actually one).<br /><br />This will be null on a `contactend` event. |
+| impulses       | The set of impulses at these contact points, a `VectorPxReal`.  Read length from `impulses.size()`, then access using `impulses.get(index)` for each index < `size`, which returns a number.<br /><br />This will be null on a `contactend` event. |
+| otherComponent | The `physx-body` component for the other object in the collision. |
+
+
+
 ## Statistics
 
 The following statistics are available from PhysX.  Each of these is refreshed every 100 ticks (i.e. every 100 frames).
