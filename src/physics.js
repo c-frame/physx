@@ -1044,10 +1044,16 @@ AFRAME.registerComponent('physx-body', {
       this.rigidBody.setAngularDamping(this.data.angularDamping)
       this.rigidBody.setLinearDamping(this.data.linearDamping)
       this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eKINEMATIC, false)
-      if (this.data.highPrecision)
-      {
-        this.rigidBody.setSolverIterationCounts(4, 2);
+    }
+
+    if (this.data.highPrecision)
+    {
+      this.rigidBody.setSolverIterationCounts(4, 2);
+      if (this.data.type === 'dynamic') {
         this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eENABLE_CCD, true)
+      }
+      else if (this.data.type === 'kinematic') {
+        this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eENABLE_SPECULATIVE_CCD, true);
       }
     }
 
