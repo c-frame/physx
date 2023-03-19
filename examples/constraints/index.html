@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>A-Frame: Physics</title>
+    <meta name="description" content="A-Frame Physics - Consraints">
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls@0.4.3/dist/aframe-blink-controls.min.js"></script>
+    <script src="../../dist/physx.js"></script>
+    <script src="../components/force-pushable.js"></script>
+    <script src="../components/grab.js"></script>
+  
+    <link rel="stylesheet" href="../../styles.css">
+  </head>
+  <body>
+    <div class="text-overlay">
+      <p>Demonstration of many PhysX constraints including Fixed, Revolute, Spherical 
+        and Prismatic constraints.</p>
+      <p>Click when the red reticle is over a red object to apply a force to it.</p>
+      <p>NOTE: Linear constraints for slider are not yet implemented</p>
+    </div>
+        <a class="code-link"
+        target="_blank"
+        href="https://github.com/c-frame/physx/blob/master/examples/constraints/index.html">
+        view code
+    </a>
+    <a-scene environment
+             physx="autoLoad: true; delay: 1000; useDefaultScene: false;stats: panel">
+      <a-entity id="player">
+        <a-entity camera look-controls wasd-controls position="0 1.6 0">
+          <a-entity cursor
+            raycaster="objects:[physx-force-pushable]"
+            position="0 0 -0.5"
+            geometry="primitive: circle; radius: 0.01; segments: 4;"
+            material="color: #FF4444; shader: flat">
+          </a-entity>
+        </a-entity>
+        <a-entity id="left-hand" hand-controls="hand: left" blink-controls physx-grab>
+          <a-sphere id="left-hand-collider" 
+                    radius="0.02"
+                    visible="false"
+                    physx-body="type: kinematic; emitCollisionEvents: true">
+          </a-sphere>
+        </a-entity>
+        <a-entity id="right-hand" hand-controls="hand: right" physx-grab>
+          <a-sphere id="right-hand-collider" 
+                    radius="0.02"
+                    visible="false"
+                    physx-body="type: kinematic; emitCollisionEvents: true">
+          </a-sphere>
+        </a-entity>
+      </a-entity>
+
+      <!-- Note that PhysX constraints don't currently seem to work with scales other than 1 1 1-->
+      
+      <!-- CONE TWIST -->
+      <a-entity position="2 0 -1">
+        <a-text value="Cone Twist\n(Spherical)" position="0 1.5 0" align="center"></a-text>
+        <a-sphere id="conetwist-target" radius="0.125" color="#777" position="0 1 0"
+                  physx-body="type: static">
+        </a-sphere>
+        <a-box width="0.25" height="0.25" depth="0.25" color="#F00"
+               physx-body
+               position="-0.25 1 0"
+               physx-force-pushable>
+          <a-entity physx-joint="type: Spherical; target:#conetwist-target; collideWithTarget: true"
+                    position="0.125 0 0">
+          </a-entity>
+        </a-box>
+      </a-entity>
+
+      <!-- HINGE -->
+      <!-- PhysX needs us to ensure the door has room to swing.
+           Door is 2.5cm thick.
+           So we position the hinge 1.25cm away from the edge (12.5 - 1.25 = 11.25cm or 0.1125m)
+           And we leave a gap of 0.52 cm for the door to swing
+           (1.25cm x sqrt(2) = 1.77cm space needed, less gap of 1.25cm alrready provided =
+            0.52cm of space needed)
+      -->
+      <a-entity position="-2 0 -1">
+        <a-text value="Hinge\n(Revolute)" position="0 1.5 0" align="center"></a-text>
+        <a-box id="hinge-target" position="-0.25 1 0.0" color="#777" physx-body="type: static" 
+               width="0.25"
+               height="0.25"
+               depth="0.25"></a-box>
+        <a-box depth="0.025"
+               color="#F00"
+               width="0.25"
+               height="0.25"
+               position="0.0052 1 0"
+               physx-body 
+               physx-force-pushable>
+          <a-entity physx-joint="type: Revolute; target:#hinge-target; collideWithTarget: true"
+                    rotation="0 0 90"
+                    position="-0.1125 0 0">
+          </a-entity>
+        </a-box>
+        <!-- This post needs to give enough room that the door does not stick
+             in the closed position-->
+        <a-box position="0.256 1 0" color="#777" physx-body="type: static"
+               width="0.25"
+               height="0.25"
+               depth="0.25"></a-box>
+      </a-entity>
+
+      <!-- LOCK -->
+      <a-entity position="0 0 -1">
+        <a-text value="Lock" position="0 1.5 0" align="center"></a-text>
+        <a-box id="lock-target"
+               position="0 1.0 0"
+               height="0.25"
+               width="0.25"
+               depth="0.25"
+               color="#777"
+               physx-body="type: static">
+        </a-box>
+        <a-box color="#F00"
+               position="0 1.25 0"
+               height="0.25"
+               width="0.25"
+               depth="0.25"
+               physx-body
+               physx-force-pushable>
+          <a-entity physx-joint="type: Fixed; target:#lock-target; collideWithTarget: true"
+                    position="0 0 0">
+          </a-entity>
+        </a-box>
+      </a-entity>
+
+      <!-- POINT TO POINT -->
+      <a-entity position="4 0 -1">
+        <a-text value="Point to Point\n(Spherical)" position="0 1.5 0" align="center"></a-text>
+        <a-box id="pointtopoint-target"
+               color="#777"
+               position="0 1 0"
+               height="0.25"
+               width="0.25"
+               depth="0.25"
+               physx-body="type: static">
+        </a-box>
+        <a-box color="#F00"
+               position="0.25 0.75 0.25"
+               height="0.25"
+               width="0.25"
+               depth="0.25"
+               physx-body
+               physx-force-pushable>
+        <a-entity physx-joint="type: Spherical; target:#conetwist-target; collideWithTarget: true"
+                  position="-0.125 0.125 -0.125">
+        </a-entity>
+        </a-box>
+      </a-entity>
+
+      <!-- SLIDER -->
+      <a-entity position="-4 0 -1">
+        <a-text value="Slider\n(Prismatic)" position="0 1.5 0" align="center"></a-text>
+        <a-sphere id="slider-target"
+               radius="0.125"
+               position="-0.5 1 0"
+               color="#777"
+               physx-body="type: static">
+        </a-sphere>
+        <a-sphere color="#F00"
+               radius="0.125"
+               position="0 1 0"
+               physx-body
+               physx-force-pushable>
+               <a-entity physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true">
+               </a-entity>
+               <!-- Note that we don't currently have support for slider constraints
+                    So the sphere will slide until it hits a static object -->
+        </a-sphere>
+        <a-cylinder radius="0.05" height="2" position="0 1 0" rotation="0 0 90"></a-cylinder>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
