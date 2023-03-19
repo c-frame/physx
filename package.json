@@ -1,6 +1,6 @@
 {
   "name": "@c-frame/physx",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Physics for A-Frame using Nvidia PhysX",
   "main": "index.js",
   "directories": {
