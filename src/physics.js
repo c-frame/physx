@@ -1048,11 +1048,12 @@ AFRAME.registerComponent('physx-body', {
 
     if (this.data.highPrecision)
     {
-      this.rigidBody.setSolverIterationCounts(4, 2);
       if (this.data.type === 'dynamic') {
+        this.rigidBody.setSolverIterationCounts(4, 2);
         this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eENABLE_CCD, true)
       }
       else if (this.data.type === 'kinematic') {
+        this.rigidBody.setSolverIterationCounts(4, 2);
         this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eENABLE_SPECULATIVE_CCD, true);
       }
     }
