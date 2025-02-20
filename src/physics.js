@@ -462,7 +462,7 @@ AFRAME.registerSystem('physx', {
     let self = this;
     let resolveInitialized;
     let initialized = new Promise((r, e) => resolveInitialized = r)
-    PhysX = PHYSX({
+    let instance = PHYSX({
         locateFile() {
             return self.findWasm()
         },
@@ -470,8 +470,9 @@ AFRAME.registerSystem('physx', {
           resolveInitialized();
         }
       });
-    if (PhysX instanceof Promise) PhysX = await PhysX;
-    this.PhysX = PhysX;
+    if (instance instanceof Promise) instance = await instance;
+    this.PhysX = instance;
+    PhysX = instance;
     await initialized;
     self.startPhysXScene()
     self.physXInitialized = true
