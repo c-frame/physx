@@ -307,7 +307,7 @@ let PhysX
 // Playground](https://glitch.com/edit/#!/fascinated-hip-period?path=index.html)
 //
 // It is also helpful to refer to the [NVIDIA PhysX
-// documentation](https://gameworksdocs.nvidia.com/PhysX/4.0/documentation/PhysXGuide/Manual/Index.html)
+// documentation](https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Index.html)
 AFRAME.registerSystem('physx', {
   schema: {
     // Amount of time to wait after loading before starting the physics. Can be
@@ -785,8 +785,8 @@ AFRAME.registerSystem('physx', {
 
     // Aditional statistics beyond simple body counts should be possible.
     // They could be accessed via PxScene::getSimulationStatistics()
-    // https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/Statistics.html
-    // https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxSimulationStatistics.html
+    // https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Manual/Statistics.html
+    // https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxSimulationStatistics.html
     // However this part of the API is not yet exposed in the
     // WASM PhysX build we are using
     // See: https://github.com/zach-capalbo/PhysX/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp
@@ -1543,7 +1543,7 @@ AFRAME.registerComponent('physx-joint', {
   multiple: true,
   schema: {
     // Rigid body joint type to use. See the [NVIDIA PhysX joint
-    // documentation](https://gameworksdocs.nvidia.com/PhysX/4.0/documentation/PhysXGuide/Manual/Joints.html)
+    // documentation](https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Manual/Joints.html)
     // for details on each type
     type: {default: "Spherical", oneOf: ["Fixed", "Spherical", "Distance", "Revolute", "Prismatic", "D6"]},
 
