@@ -152,9 +152,9 @@ AFRAME.registerComponent('tick-time-display', {
   },
 
   init() {
-      this.updateData = this.updateData.bind(this);
+      this.updateStatsData = this.updateStatsData.bind(this);
 
-      this.el.sceneEl.addEventListener('physics-tick-summary', this.updateData)
+      this.el.sceneEl.addEventListener('physics-tick-summary', this.updateStatsData)
 
       this.blankData = {
         percentile__50: "0.00",
@@ -163,7 +163,7 @@ AFRAME.registerComponent('tick-time-display', {
       }
   },
 
-  updateData(evt) {
+  updateStatsData(evt) {
 
     // Cover the fact that some engines (PhysX) don't output "before" data
     if (!evt.detail.before) {
