@@ -1382,7 +1382,7 @@ AFRAME.registerComponent('physx-joint-driver', {
 //   <a-entity physx-joint="type: D6"
 //             physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 20"
 //             physx-joint-constraint__y="constrainedAxes: y; linearLimit: 0 3; stiffness: 3"
-//             physx-joint-constraint__rotation="lockedAxes: twist; swing"></a-entity>
+//             physx-joint-constraint__rotation="lockedAxes: twist,swing"></a-entity>
 // </a-box>
 //```
 //
