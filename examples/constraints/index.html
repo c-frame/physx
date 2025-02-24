@@ -16,7 +16,6 @@
       <p>Demonstration of many PhysX constraints including Fixed, Revolute, Spherical 
         and Prismatic constraints.</p>
       <p>Click when the red reticle is over a red object to apply a force to it.</p>
-      <p>NOTE: Linear constraints for slider are not yet implemented</p>
     </div>
         <a class="code-link"
         target="_blank"
@@ -165,10 +164,10 @@
                position="0 1 0"
                physx-body
                physx-force-pushable>
-               <a-entity physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true">
+               <a-entity
+                 physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true"
+                 physx-joint-constraint="linearLimit: -0.2 0.8">
                </a-entity>
-               <!-- Note that we don't currently have support for slider constraints
-                    So the sphere will slide until it hits a static object -->
         </a-sphere>
         <a-cylinder radius="0.05" height="2" position="0 1 0" rotation="0 0 90"></a-cylinder>
       </a-entity>

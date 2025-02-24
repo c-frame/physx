@@ -1409,7 +1409,7 @@ AFRAME.registerComponent('physx-joint-constraint', {
 
     // Limit on linear movement. Only affects `x`, `y`, and `z` axes.
     // First vector component is the minimum allowed position
-    linearLimit: {type: 'vec2'}, // for D6 joint type
+    linearLimit: {type: 'vec2'}, // for D6 and Prismatic joint type
 
     // Limit on angular movement. 'lowerLimit upperLimit tolerance'
     // Example: '-110 80 1' to move between -110 and 80 with a tolerance of 1 degree
@@ -1443,8 +1443,8 @@ AFRAME.registerComponent('physx-joint-constraint', {
   },
   setJointConstraint() {
     const jointType = this.el.components['physx-joint'].data.type;
-    if (jointType !== 'D6' && jointType !== 'Revolute') {
-      console.warn("Only D6 and Revolute joint constraints supported at the moment")
+    if (jointType !== 'D6' && jointType !== 'Revolute' && jointType !== 'Prismatic') {
+      console.warn("Only D6, Revolute and Prismatic joint constraints supported at the moment")
       return;
     }
 
@@ -1466,6 +1466,12 @@ AFRAME.registerComponent('physx-joint-constraint', {
       }
       joint.setLimit(limitPair);
       joint.setRevoluteJointFlag(PhysX.PxRevoluteJointFlag.eLIMIT_ENABLED, true);
+    }
+
+    if (jointType === 'Prismatic') {
+      const limitPair = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), -this.data.linearLimit.y, -this.data.linearLimit.x);
+      joint.setLimit(limitPair);
+      joint.setPrismaticJointFlag(PhysX.PxPrismaticJointFlag.eLIMIT_ENABLED, true);
     }
 
     if (jointType === 'D6') {
