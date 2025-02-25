@@ -1422,14 +1422,11 @@ AFRAME.registerComponent('physx-joint-constraint', {
     twistLimit: {type: 'vec2'}, // for D6 joint type
 
     // Spring damping for soft constraints
-    damping: {default: 0.0}, // for D6 and Revolute joint type
-    spring: {default: 0.0}, // for Revolute joint type
-    // For Revolute joint, if damping and spring are greater than 0, it will make this joint a soft constraint
+    damping: {default: 0.0},
     // Spring restitution for soft constraints
-    restitution: {default: 0.0}, // for D6 joint type
-    // If greater than 0, will make this joint a soft constraint, and use a
-    // spring force model
-    stiffness: {default: 0.0}, // for D6 joint type
+    restitution: {default: 0.0},
+    // If greater than 0, will make this joint a soft constraint, and use a spring force model
+    stiffness: {default: 0.0},
   },
   events: {
     'physx-jointcreated': function(e) {
@@ -1452,22 +1449,21 @@ AFRAME.registerComponent('physx-joint-constraint', {
     const joint = this.el.components['physx-joint'].joint;
 
     if (jointType === 'Revolute') {
-      // we use a vec3 for the property but it means x=lowerLimit, y=upperLimit z=tolerance
       // https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxJointAngularLimitPair.html
+      const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
       const limitPair = new PhysX.PxJointAngularLimitPair(
         -THREE.MathUtils.degToRad(this.data.angularLimit.y),
-        -THREE.MathUtils.degToRad(this.data.angularLimit.x)
-      );
-      if (this.data.spring > 0 && this.data.damping > 0) {
-        limitPair.spring = this.data.spring;
-        limitPair.damping = this.data.damping;
-      }
+        -THREE.MathUtils.degToRad(this.data.angularLimit.x),
+        spring)
+      limitPair.restitution = this.data.restitution;
       joint.setLimit(limitPair);
       joint.setRevoluteJointFlag(PhysX.PxRevoluteJointFlag.eLIMIT_ENABLED, true);
     }
 
     if (jointType === 'Prismatic') {
-      const limitPair = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), -this.data.linearLimit.y, -this.data.linearLimit.x, -1);
+      const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+      const limitPair = new PhysX.PxJointLinearLimitPair(-this.data.linearLimit.y, -this.data.linearLimit.x, spring);
+      limitPair.restitution = this.data.restitution;
       joint.setLimit(limitPair);
       joint.setPrismaticJointFlag(PhysX.PxPrismaticJointFlag.eLIMIT_ENABLED, true);
     }
@@ -1503,9 +1499,12 @@ AFRAME.registerComponent('physx-joint-constraint', {
         {
           joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eLIMITED)
           const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
-          const pair = new PhysX.PxJointAngularLimitPair(this.data.limitTwist.x, this.data.limitTwist.y, spring)
-          pair.restitution = this.data.restitution;
-          joint.setTwistLimit(pair)
+          const limitPair = new PhysX.PxJointAngularLimitPair(
+            -THREE.MathUtils.degToRad(this.data.angularLimit.y),
+            -THREE.MathUtils.degToRad(this.data.angularLimit.x),
+            spring)
+          limitPair.restitution = this.data.restitution;
+          joint.setTwistLimit(limitPair)
           continue;
         }
 

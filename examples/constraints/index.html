@@ -89,7 +89,7 @@
                physx-body 
                physx-force-pushable="force: 1">
           <a-entity physx-joint="type: Revolute; target:#hinge-target; collideWithTarget: true"
-                    physx-joint-constraint="angularLimit: -110 80"
+                    physx-joint-constraint="angularLimit: -110 80; damping: 20; stiffness: 100"
                     rotation="0 0 90"
                     position="-0.1125 0 0">
           </a-entity>
@@ -166,7 +166,7 @@
                physx-force-pushable>
                <a-entity
                  physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true"
-                 physx-joint-constraint="linearLimit: -0.2 0.8">
+                 physx-joint-constraint="linearLimit: -0.2 0.8; damping: 20; stiffness: 100">
                </a-entity>
         </a-sphere>
         <a-cylinder radius="0.05" height="2" position="0 1 0" rotation="0 0 90"></a-cylinder>
