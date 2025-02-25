@@ -1467,21 +1467,15 @@ AFRAME.registerComponent('physx-joint-constraint', {
     }
 
     if (jointType === 'Prismatic') {
-      const limitPair = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), -this.data.linearLimit.y, -this.data.linearLimit.x);
+      const limitPair = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), -this.data.linearLimit.y, -this.data.linearLimit.x, -1);
       joint.setLimit(limitPair);
       joint.setPrismaticJointFlag(PhysX.PxPrismaticJointFlag.eLIMIT_ENABLED, true);
     }
 
     if (jointType === 'D6') {
       let llimit = () => {
-        let l = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), this.data.linearLimit.x, this.data.linearLimit.y);
-        l.stiffness = this.data.stiffness;
-        l.damping = this.data.damping;
-        // Setting stiffness automatically sets restitution to the same value.
-        // Is it correct, then to override with default restitution value of 0, even if
-        // no restitution value was specified?
-        // Not sure - but commenting out this line doesn't help with problems observed with spring behaviour.
-        // Seem spring.html example.
+        const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+        const l = new PhysX.PxJointLinearLimitPair(this.data.linearLimit.x, this.data.linearLimit.y, spring);
         l.restitution = this.data.restitution;
         return l
       }
@@ -1505,22 +1499,20 @@ AFRAME.registerComponent('physx-joint-constraint', {
           continue;
         }
 
-        if (axis === PhysX.eTWIST)
+        if (axis === PhysX.PxD6Axis.eTWIST)
         {
           joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eLIMITED)
-          let pair = new PhysX.PxJointAngularLimitPair(this.data.limitTwist.x, this.data.limitTwist.y)
-          pair.stiffness = this.data.stiffness
-          pair.damping = this.data.damping
-          pair.restitution = this.data.restitution
+          const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+          const pair = new PhysX.PxJointAngularLimitPair(this.data.limitTwist.x, this.data.limitTwist.y, spring)
+          pair.restitution = this.data.restitution;
           joint.setTwistLimit(pair)
           continue;
         }
 
         joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
-        let cone = new PhysX.PxJointLimitCone(this.data.limitCone.x, this.data.limitCone.y)
-        cone.damping = this.data.damping
-        cone.stiffness = this.data.stiffness
-        cone.restitution = this.data.restitution
+        const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+        const cone = new PhysX.PxJointLimitCone(this.data.limitCone.x, this.data.limitCone.y, spring)
+        cone.restitution = this.data.restitution;
         joint.setSwingLimit(cone)
       }
     }
