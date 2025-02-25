@@ -18,7 +18,6 @@ AFRAME.registerComponent('physx-grab', {
 
     this.grabbing = false;
     this.hitEl =      /** @type {AFRAME.Element}    */ null;
-    this.physics =    /** @type {AFRAME.System}     */ this.el.sceneEl.systems.physics;
 
     // Bind event handlers
     this.onHit = this.onHit.bind(this);
