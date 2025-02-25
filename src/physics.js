@@ -329,7 +329,7 @@ AFRAME.registerSystem('physx', {
     speed: {default: 1.0},
 
     // URL for the PhysX WASM bundle.
-    wasmUrl: {default: "https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm"},
+    wasmUrl: {default: "../../wasm/physx.release.wasm"},
 
     // If true, sets up a default scene with a ground plane and bounding
     // cylinder.
@@ -473,6 +473,7 @@ AFRAME.registerSystem('physx', {
     if (instance instanceof Promise) instance = await instance;
     this.PhysX = instance;
     PhysX = instance;
+    globalThis.PhysX = instance;
     await initialized;
     self.startPhysXScene()
     self.physXInitialized = true
