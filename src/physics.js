@@ -1411,9 +1411,8 @@ AFRAME.registerComponent('physx-joint-constraint', {
     // First vector component is the minimum allowed position
     linearLimit: {type: 'vec2'}, // for D6 and Prismatic joint type
 
-    // Limit on angular movement. 'lowerLimit upperLimit tolerance'
-    // Example: '-110 80 1' to move between -110 and 80 with a tolerance of 1 degree
-    angularLimit: {type: 'vec3'}, // for Revolute joint type
+    // Limit on angular movement. Example: `-110 80` to move between -110 and 80 degrees
+    angularLimit: {type: 'vec2'}, // for Revolute joint type
 
     // Two angles specifying a cone in which the joint is allowed to swing, like
     // a pendulum.
@@ -1457,8 +1456,7 @@ AFRAME.registerComponent('physx-joint-constraint', {
       // https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxJointAngularLimitPair.html
       const limitPair = new PhysX.PxJointAngularLimitPair(
         -THREE.MathUtils.degToRad(this.data.angularLimit.y),
-        -THREE.MathUtils.degToRad(this.data.angularLimit.x),
-        THREE.MathUtils.degToRad(this.data.angularLimit.z)
+        -THREE.MathUtils.degToRad(this.data.angularLimit.x)
       );
       if (this.data.spring > 0 && this.data.damping > 0) {
         limitPair.spring = this.data.spring;
