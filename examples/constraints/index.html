@@ -25,7 +25,7 @@
     <a-scene environment
              physx="autoLoad: true; delay: 1000; useDefaultScene: false;stats: panel">
       <a-entity id="player">
-        <a-entity camera look-controls wasd-controls position="0 1.6 0">
+        <a-entity camera look-controls wasd-controls="acceleration: 30" position="0 1.6 0">
           <a-entity cursor
             raycaster="objects:[physx-force-pushable]"
             position="0 0 -0.5"
