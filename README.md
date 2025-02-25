@@ -252,15 +252,23 @@ Can only be used on an entity with the `physx-joint` component.
 You can set multiple constraints per joint. Note that in order to specify attributes of individual axes, you will need to use multiple constraints. For instance:
 
 ```html
-<a-box physx-body>
-  <a-entity physx-joint="type: D6"
-            physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 20"
-            physx-joint-constraint__y="constrainedAxes: y; linearLimit: 0 3; stiffness: 3"
-            physx-joint-constraint__rotation="lockedAxes: twist,swing"></a-entity>
+<a-box color="#F00"
+       position="0 1.75 0"
+       height="0.25"
+       width="0.25"
+       depth="0.25"
+       physx-body
+       physx-force-pushable>
+  <a-entity
+    physx-joint="type: D6"
+    physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 0.2"
+    physx-joint-constraint__y="constrainedAxes: y; linearLimit: -1 0; stiffness: 20"
+    physx-joint-constraint__rotation="lockedAxes: twist,swing"
+  ></a-entity>
 </a-box>
 ```
 
-In the above example, the box will be able to move from -1 to 20 in both the x and z direction. It will be able to move from 0 to 3 in the y direction, but this will be a soft constraint, subject to spring forces if the box goes past in the y direction. All rotation will be locked. (Note that since no target is specified, it will use the scene default target, effectively jointed to joint's initial position in the world)
+In the above example, the box will be able to move from -1 to 0.2 in both the x and z direction. It will be able to move from -1 to 0 in the y direction (relative to parent position), but this will be a soft constraint, subject to spring forces if the box goes past in the y direction. All rotation will be locked. (Note that since no target is specified, it will use the scene default target, effectively jointed to joint's initial position in the world)
 
 ### Revolute joint constraint
 

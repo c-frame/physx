@@ -13,8 +13,8 @@
   </head>
   <body>
     <div class="text-overlay">
-      <p>Demonstration of many PhysX constraints including Fixed, Revolute, Spherical 
-        and Prismatic constraints.</p>
+      <p>Demonstration of many PhysX constraints including Fixed, Revolute, Spherical,
+        Prismatic and D6 constraints.</p>
       <p>Click when the red reticle is over a red object to apply a force to it.</p>
     </div>
         <a class="code-link"
@@ -170,6 +170,33 @@
                </a-entity>
         </a-sphere>
         <a-cylinder radius="0.05" height="2" position="0 1 0" rotation="0 0 90"></a-cylinder>
+      </a-entity>
+
+      <!-- SPRING -->
+      <a-entity position="-6 0 -1">
+        <a-text value="Spring\n(D6)" position="0 2.5 0" align="center"></a-text>
+        <a-box
+          position="0 2 0"
+          height="0.25"
+          width="0.25"
+          depth="0.25"
+          color="#777"
+        >
+        </a-box>
+        <a-box color="#F00"
+               position="0 1.75 0"
+               height="0.25"
+               width="0.25"
+               depth="0.25"
+               physx-body
+               physx-force-pushable>
+          <a-entity
+            physx-joint="type: D6"
+            physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 0.2"
+            physx-joint-constraint__y="constrainedAxes: y; linearLimit: -1 0; stiffness: 20"
+            physx-joint-constraint__rotation="lockedAxes: twist,swing"
+          ></a-entity>
+        </a-box>
       </a-entity>
     </a-scene>
   </body>

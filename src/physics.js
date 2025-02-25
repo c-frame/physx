@@ -1370,28 +1370,7 @@ AFRAME.registerComponent('physx-joint-driver', {
   }
 })
 
-// Adds a constraint to a [`physx-joint`](#physx-joint). Currently only **D6**
-// joints are supported.
-//
-// Can only be used on an entity with the `physx-joint` component. You can set
-// multiple constraints per joint. Note that in order to specify attributes of
-// individual axes, you will need to use multiple constraints. For instance:
-//
-//```
-// <a-box physx-body>
-//   <a-entity physx-joint="type: D6"
-//             physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 20"
-//             physx-joint-constraint__y="constrainedAxes: y; linearLimit: 0 3; stiffness: 3"
-//             physx-joint-constraint__rotation="lockedAxes: twist,swing"></a-entity>
-// </a-box>
-//```
-//
-// In the above example, the box will be able to move from -1 to 20 in both the
-// x and z direction. It will be able to move from 0 to 3 in the y direction,
-// but this will be a soft constraint, subject to spring forces if the box goes
-// past in the y direction. All rotation will be locked. (Note that since no
-// target is specified, it will use the scene default target, effectively
-// jointed to joint's initial position in the world)
+// See README.md for examples
 AFRAME.registerComponent('physx-joint-constraint', {
   multiple: true,
   schema: {
@@ -1469,11 +1448,16 @@ AFRAME.registerComponent('physx-joint-constraint', {
     }
 
     if (jointType === 'D6') {
-      let llimit = () => {
+      const createLinearLimit = (axis) => {
         const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
-        const l = new PhysX.PxJointLinearLimitPair(this.data.linearLimit.x, this.data.linearLimit.y, spring);
-        l.restitution = this.data.restitution;
-        return l
+        let limitPair;
+        if (axis === PhysX.PxD6Axis.eX || axis === PhysX.PxD6Axis.eZ) {
+          limitPair = new PhysX.PxJointLinearLimitPair(-this.data.linearLimit.y, -this.data.linearLimit.x, spring);
+        } else {
+          limitPair = new PhysX.PxJointLinearLimitPair(this.data.linearLimit.x, this.data.linearLimit.y, spring);
+        }
+        limitPair.restitution = this.data.restitution;
+        return limitPair;
       }
 
       for (let axis of this.freeAxes)
@@ -1491,7 +1475,7 @@ AFRAME.registerComponent('physx-joint-constraint', {
         if (axis === PhysX.PxD6Axis.eX || axis === PhysX.PxD6Axis.eY || axis === PhysX.PxD6Axis.eZ)
         {
           joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
-          joint.setLinearLimit(axis, llimit())
+          joint.setLinearLimit(axis, createLinearLimit(axis))
           continue;
         }
 
