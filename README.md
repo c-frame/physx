@@ -87,17 +87,15 @@ If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system wil
 
 If you want a little more control over how things behave, you can set the [`physx-material`](#component-physx-material) component on the objects in your simulation, or use [`physx-joint`s](#component-physx-joint), [`physx-joint-constraint`s](#component-physx-joint-constraint) and [`physx-joint-driver`s](#component-physx-joint-driver) to add some complexity to your scene.
 
-If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
+If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
 
 ```
-   let myGeometry = new this.el.sceneEl.PhysX.PxCapsuleGeometry(1.0, 2.0)
+   let myGeometry = new this.el.sceneEl.systems.physx.PhysX.PxCapsuleGeometry(1.0, 2.0)
 ```
 
-The system uses [Zach Capalbo's fork](https://github.com/zach-capalbo/PhysX) of PhysX, built using the [Docker Wrapper](https://github.com/ashconnell/physx-js). To see what's exposed to JavaScript, see [PxWebBindings.cpp](https://github.com/zach-capalbo/PhysX/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp)
+The system uses [a fork](https://github.com/c-frame/PhysXSDK) of PhysX, built using the [Docker Wrapper](https://github.com/c-frame/physx-js). To see what's exposed to JavaScript, see [PxWebBindings.cpp](https://github.com/c-frame/PhysXSDK/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp)
 
-For a complete example of how to use this, you can see the [aframe-vartiste-toolkit Physics Playground](https://glitch.com/edit/#!/fascinated-hip-period?path=index.html)
-
-It is also helpful to refer to the [NVIDIA PhysX documentation](https://gameworksdocs.nvidia.com/PhysX/4.0/documentation/PhysXGuide/Manual/Index.html)
+It is also helpful to refer to the [NVIDIA PhysX documentation](https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Index.html)
 
 ### physx Schema
 
