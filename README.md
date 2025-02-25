@@ -243,11 +243,15 @@ This can only be used on an entity with a `physx-joint` component. Currently onl
 
 ## Component `physx-joint-constraint` 
 
-Adds a constraint to a [`physx-joint`](#component-physx-joint). Currently only **D6** joints are supported.
+Adds a constraint to a [`physx-joint`](#component-physx-joint).
+Supported joints are **D6**, **Revolute** and **Prismatic**.
+Can only be used on an entity with the `physx-joint` component.
 
-Can only be used on an entity with the `physx-joint` component. You can set multiple constraints per joint. Note that in order to specify attributes of individual axes, you will need to use multiple constraints. For instance:
+### D6 joint constraint
 
-```
+You can set multiple constraints per joint. Note that in order to specify attributes of individual axes, you will need to use multiple constraints. For instance:
+
+```html
 <a-box physx-body>
   <a-entity physx-joint="type: D6"
             physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 20"
@@ -258,19 +262,68 @@ Can only be used on an entity with the `physx-joint` component. You can set mult
 
 In the above example, the box will be able to move from -1 to 20 in both the x and z direction. It will be able to move from 0 to 3 in the y direction, but this will be a soft constraint, subject to spring forces if the box goes past in the y direction. All rotation will be locked. (Note that since no target is specified, it will use the scene default target, effectively jointed to joint's initial position in the world)
 
+### Revolute joint constraint
+
+Example of a door with an angular limit between -110 and 80 degrees:
+
+```html
+<a-box id="hinge-target" position="-0.25 1 0.0" color="#777" physx-body="type: static"
+       width="0.25"
+       height="0.25"
+       depth="0.25"></a-box>
+<a-box depth="0.025"
+       color="#F00"
+       width="0.25"
+       height="0.25"
+       position="0.0052 1 0.1125"
+       physx-body
+       physx-force-pushable="force: 1">
+  <a-entity physx-joint="type: Revolute; target: #hinge-target; collideWithTarget: true"
+            physx-joint-constraint="angularLimit: -110 80; damping: 20; stiffness: 100"
+            rotation="0 0 90"
+            position="-0.1125 0 0">
+  </a-entity>
+</a-box>
+```
+
+### Prismatic joint constraint
+
+Slider example with position between -0.2 and 0.8 from the initial position:
+
+```html
+<a-sphere
+  id="slider-target"
+  radius="0.125"
+  position="-0.5 1 0"
+  color="#777"
+  physx-body="type: static">
+</a-sphere>
+<a-sphere color="#F00"
+  radius="0.125"
+  position="0 1 0"
+  physx-body
+  physx-force-pushable>
+  <a-entity
+    physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true"
+    physx-joint-constraint="linearLimit: -0.2 0.8; damping: 20; stiffness: 100">
+  </a-entity>
+</a-sphere>
+```
+
 ### physx-joint-constraint Schema
 
 | Property        | Type   | Default | Description                                                  |
 | --------------- | ------ | ------- | ------------------------------------------------------------ |
-| lockedAxes      | array  | []      | Which axes are explicitly locked by this constraint and can't be moved at all. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
-| constrainedAxes | array  | []      | Which axes are constrained by this constraint. These axes can be moved within the set limits. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
-| freeAxes        | array  | []      | Which axes are explicitly freed by this constraint. These axes will not obey any limits set here. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
-| linearLimit     | vec2   |         | Limit on linear movement. Only affects `x`, `y`, and `z` axes. First vector component is the minimum allowed position |
-| limitCone       | vec2   |         | Two angles specifying a cone in which the joint is allowed to swing, like a pendulum. |
-| twistLimit      | vec2   |         | Minimum and maximum angles that the joint is allowed to twist |
-| damping         | number | 0       | Spring damping for soft constraints                          |
-| restitution     | number | 0       | Spring restitution for soft constraints                      |
-| stiffness       | number | 0       | If greater than 0, will make this joint a soft constraint, and use a spring force model |
+| lockedAxes      | array  | []      | [D6] Which axes are explicitly locked by this constraint and can't be moved at all. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
+| constrainedAxes | array  | []      | [D6] Which axes are constrained by this constraint. These axes can be moved within the set limits. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
+| freeAxes        | array  | []      | [D6] Which axes are explicitly freed by this constraint. These axes will not obey any limits set here. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
+| linearLimit     | vec2   |         | [D6, Prismatic] Limit on linear movement. Only affects `x`, `y`, and `z` axes. First vector component is the minimum allowed position |
+| angularLimit    | vec2   |         | [Revolute] Limit on angular movement. First vector component is the minimum allowed angle, second is the maximum |
+| limitCone       | vec2   |         | [D6] Two angles specifying a cone in which the joint is allowed to swing, like a pendulum. |
+| twistLimit      | vec2   |         | [D6] Minimum and maximum angles that the joint is allowed to twist |
+| damping         | number | 0       | [All] Spring damping for soft constraints                          |
+| restitution     | number | 0       | [All] Spring restitution for soft constraints                      |
+| stiffness       | number | 0       | [All] If greater than 0, will make this joint a soft constraint, and use a spring force model |
 
 ------
 
