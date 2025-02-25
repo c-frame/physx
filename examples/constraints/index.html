@@ -88,7 +88,7 @@
                position="0.0052 1 0.1125"
                physx-body 
                physx-force-pushable="force: 1">
-          <a-entity physx-joint="type: Revolute; target:#hinge-target; collideWithTarget: true"
+          <a-entity physx-joint="type: Revolute; target:#hinge-target; collideWithTarget: true; projectionTolerance: 0 0"
                     physx-joint-constraint="angularLimit: -110 80; damping: 20; stiffness: 100"
                     rotation="0 0 90"
                     position="-0.1125 0 0">

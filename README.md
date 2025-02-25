@@ -377,6 +377,7 @@ Notice the joint is created between the top part of the stapler (which contains 
 | removeElOnBreak   | boolean  | false            | If true, removes the entity containing this component when the joint is broken. |
 | collideWithTarget | boolean  | false            | If false, collision will be disabled between the rigid body containing the joint and the target rigid body. |
 | softFixed         | boolean  | false            | When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things |
+| projectionTolerance | vec2   | { x: -1, y: -1 } | Kinematic projection, which forces joint back into alignment when the solver fails. First component is the linear force, second component is angular force. Set both components are >= 0 |
 
 
 

@@ -1571,6 +1571,11 @@ AFRAME.registerComponent('physx-joint', {
 
     // When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things
     softFixed: {default: false},
+
+    // Kinematic projection, which forces joint back into alignment when the solver fails.
+    // First component is the linear tolerance (in meters), second component is angular tolerance (in degrees). Set both components are >= 0
+    // See: https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Manual/Joints.html#projection
+    projectionTolerance: {type: 'vec2', default: {x: -1, y: -1}},
   },
   events: {
     constraintbreak: function(e) {
@@ -1628,6 +1633,16 @@ AFRAME.registerComponent('physx-joint', {
     }
 
     this.joint.setConstraintFlag(PhysX.PxConstraintFlag.eCOLLISION_ENABLED, this.data.collideWithTarget)
+
+    if (this.data.projectionTolerance.x >= 0 && this.data.projectionTolerance.y >= 0) {
+      this.joint.setProjectionLinearTolerance(this.data.projectionTolerance.x)
+      this.joint.setProjectionAngularTolerance(THREE.MathUtils.degToRad(this.data.projectionTolerance.y))
+      this.joint.setConstraintFlag(PhysX.PxConstraintFlag.ePROJECTION, true);
+    }
+    else
+    {
+      this.joint.setConstraintFlag(PhysX.PxConstraintFlag.ePROJECTION, false);
+    }
 
     if (this.el.hasAttribute('phsyx-custom-constraint')) return;
 
