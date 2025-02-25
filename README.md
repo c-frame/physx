@@ -1,5 +1,5 @@
 # physx
-A-Frame physics using PhysX - based on an [original implementation by Zach Capalbo](https://vartiste.xyz/docs.html#physics.js)
+A-Frame physics using PhysX
 
 For examples of usage, see:
 
