@@ -1494,7 +1494,10 @@ AFRAME.registerComponent('physx-joint-constraint', {
 
         joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
         const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
-        const cone = new PhysX.PxJointLimitCone(this.data.limitCone.x, this.data.limitCone.y, spring)
+        const cone = new PhysX.PxJointLimitCone(
+            -THREE.MathUtils.degToRad(this.data.limitCone.y),
+            -THREE.MathUtils.degToRad(this.data.limitCone.x),
+            spring)
         cone.restitution = this.data.restitution;
         joint.setSwingLimit(cone)
       }
@@ -1629,7 +1632,7 @@ AFRAME.registerComponent('physx-joint', {
 
     if (this.data.breakForce.x >= 0 && this.data.breakForce.y >= 0)
     {
-        this.joint.setBreakForce(this.data.breakForce.x, this.data.breakForce.y);
+        this.joint.setBreakForce(this.data.breakForce.x, THREE.MathUtils.degToRad(this.data.breakForce.y));
     }
 
     this.joint.setConstraintFlag(PhysX.PxConstraintFlag.eCOLLISION_ENABLED, this.data.collideWithTarget)
