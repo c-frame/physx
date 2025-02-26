@@ -324,9 +324,9 @@ Slider example with position between -0.2 and 0.8 from the initial position:
 | constrainedAxes | array  | []      | [D6] Which axes are constrained by this constraint. These axes can be moved within the set limits. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
 | freeAxes        | array  | []      | [D6] Which axes are explicitly freed by this constraint. These axes will not obey any limits set here. Should be some combination of `x`, `y`, `z`, `twist`, `swing` |
 | linearLimit     | vec2   |         | [D6, Prismatic] Limit on linear movement. Only affects `x`, `y`, and `z` axes. First vector component is the minimum allowed position |
-| angularLimit    | vec2   |         | [Revolute] Limit on angular movement. First vector component is the minimum allowed angle, second is the maximum |
-| limitCone       | vec2   |         | [D6] Two angles specifying a cone in which the joint is allowed to swing, like a pendulum. |
-| twistLimit      | vec2   |         | [D6] Minimum and maximum angles that the joint is allowed to twist |
+| angularLimit    | vec2   |         | [Revolute] Limit on angular movement in degrees. First vector component is the minimum allowed angle, second is the maximum |
+| limitCone       | vec2   |         | [D6] Two angles in degrees specifying a cone in which the joint is allowed to swing, like a pendulum. |
+| twistLimit      | vec2   |         | [D6] Minimum and maximum angles in degrees that the joint is allowed to twist |
 | damping         | number | 0       | [All] Spring damping for soft constraints                          |
 | restitution     | number | 0       | [All] Spring restitution for soft constraints                      |
 | stiffness       | number | 0       | [All] If greater than 0, will make this joint a soft constraint, and use a spring force model |
@@ -373,11 +373,11 @@ Notice the joint is created between the top part of the stapler (which contains 
 | ----------------- | -------- | ---------------- | ------------------------------------------------------------ |
 | type              | string   | Spherical        | Rigid body joint type to use. See the [NVIDIA PhysX joint documentation](https://gameworksdocs.nvidia.com/PhysX/4.0/documentation/PhysXGuide/Manual/Joints.html) for details on each type |
 | target            | selector |                  | Target object. If specified, must be an entity having the `physx-body` component. If no target is specified, a scene default target will be used, essentially joining the joint to its initial position in the world. |
-| breakForce        | vec2     | { x: -1, y: -1 } | Force needed to break the constraint. First component is the linear force, second component is angular force. Set both components are >= 0 |
+| breakForce        | vec2     | { x: -1, y: -1 } | Force needed to break the constraint. First component is the linear force, second component is angular force in degrees. Set both components are >= 0 |
 | removeElOnBreak   | boolean  | false            | If true, removes the entity containing this component when the joint is broken. |
 | collideWithTarget | boolean  | false            | If false, collision will be disabled between the rigid body containing the joint and the target rigid body. |
 | softFixed         | boolean  | false            | When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things |
-| projectionTolerance | vec2   | { x: -1, y: -1 } | Kinematic projection, which forces joint back into alignment when the solver fails. First component is the linear force, second component is angular force. Set both components are >= 0 |
+| projectionTolerance | vec2   | { x: -1, y: -1 } | Kinematic projection, which forces joint back into alignment when the solver fails. First component is the linear tolerance in meters, second component is angular tolerance in degrees. Set both components are >= 0 |
 
 
 

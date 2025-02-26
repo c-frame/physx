@@ -1390,14 +1390,14 @@ AFRAME.registerComponent('physx-joint-constraint', {
     // First vector component is the minimum allowed position
     linearLimit: {type: 'vec2'}, // for D6 and Prismatic joint type
 
-    // Limit on angular movement. Example: `-110 80` to move between -110 and 80 degrees
+    // Limit on angular movement in degrees. Example: `-110 80` to move between -110 and 80 degrees
     angularLimit: {type: 'vec2'}, // for Revolute joint type
 
-    // Two angles specifying a cone in which the joint is allowed to swing, like
+    // Two angles in degrees specifying a cone in which the joint is allowed to swing, like
     // a pendulum.
     limitCone: {type: 'vec2'}, // for D6 joint type
 
-    // Minimum and maximum angles that the joint is allowed to twist
+    // Minimum and maximum angles in degrees that the joint is allowed to twist
     twistLimit: {type: 'vec2'}, // for D6 joint type
 
     // Spring damping for soft constraints
@@ -1561,7 +1561,7 @@ AFRAME.registerComponent('physx-joint', {
     // used, essentially joining the joint to its initial position in the world.
     target: {type: 'selector'},
 
-    // Force needed to break the constraint. First component is the linear force, second component is angular force. Set both components are >= 0
+    // Force needed to break the constraint. First component is the linear force, second component is angular force in degrees. Set both components are >= 0
     breakForce: {type: 'vec2', default: {x: -1, y: -1}},
 
     // If true, removes the entity containing this component when the joint is
@@ -1576,7 +1576,7 @@ AFRAME.registerComponent('physx-joint', {
     softFixed: {default: false},
 
     // Kinematic projection, which forces joint back into alignment when the solver fails.
-    // First component is the linear tolerance (in meters), second component is angular tolerance (in degrees). Set both components are >= 0
+    // First component is the linear tolerance in meters, second component is angular tolerance in degrees. Set both components are >= 0
     // See: https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Manual/Joints.html#projection
     projectionTolerance: {type: 'vec2', default: {x: -1, y: -1}},
   },
