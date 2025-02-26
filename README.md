@@ -17,14 +17,14 @@ The URL for the PhysX wasm module needs to be specified on the `physx` component
 
 You can either download the module from the `dist` directory of this repo and the wasm file from the `wasm` directory and include them like this:
 
-```
+```html
 <script src="physx.min.js"></script>
 <a-scene physx="autoLoad: true; wasmUrl: physx.release.wasm">
 ```
 
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
-```
+```html
 <script src="https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/dist/physx.min.js"></script>
 <a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/wasm/physx.release.wasm">
 ```
@@ -33,9 +33,7 @@ Or you can download via JSDelivr CDN (specifying the version number you want to 
 
 Install the dependency:
 
-```sh
-npm install @c-frame/physx
-```
+`npm install @c-frame/physx`
 
 In your project import it:
 
@@ -75,7 +73,7 @@ Implements the a physics system using an emscripten compiled PhysX engine.
 
 If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
-```
+```html
 <a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/wasm/physx.release.wasm">
  <a-assets><a-asset-item id="#mymodel" src="..."></a-asset-item></a-assets>
 
@@ -89,8 +87,8 @@ If you want a little more control over how things behave, you can set the [`phys
 
 If you need more low-level control, the PhysX bindings are exposed through the `PhysX` property of the system. So for instance, if you wanted to make use of the [`PxCapsuleGeometry`](https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxCapsuleGeometry.html) in your own component, you would call:
 
-```
-   let myGeometry = new this.el.sceneEl.systems.physx.PhysX.PxCapsuleGeometry(1.0, 2.0)
+```js
+let myGeometry = new this.el.sceneEl.systems.physx.PhysX.PxCapsuleGeometry(1.0, 2.0)
 ```
 
 The system uses [a fork](https://github.com/c-frame/PhysXSDK) of PhysX, built using the [Docker Wrapper](https://github.com/c-frame/physx-js). To see what's exposed to JavaScript, see [PxWebBindings.cpp](https://github.com/c-frame/PhysXSDK/blob/emscripten_wip/physx/source/physxwebbindings/src/PxWebBindings.cpp)
@@ -117,7 +115,7 @@ It is also helpful to refer to the [NVIDIA PhysX documentation](https://nvidiaga
 
 | Signature       | Description                           |
 | --------------- | ------------------------------------- |
-| startPhysX `()` | Loads PhysX and starts the simulation |
+| startPhysX()    | Loads PhysX and starts the simulation |
 
 ------
 
@@ -129,7 +127,7 @@ Controls physics properties for individual shapes or rigid bodies. You can set t
 
 For instance, in the following scene fragment:
 
-```
+```html
 <a-entity id="bodyA" physx-body physx-material="staticFriction: 0.5">
   <a-box id="shape1" physx-material="staticFriction: 1.0"></a-box>
   <a-sphere id="shape2"></a-sphere>
@@ -175,7 +173,7 @@ When the component is initialized, and on the `object3dset` event, all visible m
 
 Visible meshes can be excluded from this shape generation process by setting the `physx-no-collision` attribute on the corresponding `a-entity` element. Invisible meshes can be included into this shape generation process by settingt the `physx-hidden-collision` attribute on the corresponding `a-entity` element. This can be especially useful when using an external tool (like [Blender V-HACD](https://github.com/andyp123/blender_vhacd)) to create a low-poly convex collision mesh for a high-poly or concave mesh. This leads to this pattern for such cases:
 
-```
+```html
    <a-entity physx-body="type: dynamic">
      <a-entity gltf-model="HighPolyOrConcaveURL.gltf" physx-no-collision=""></a-entity>
      <a-entity gltf-model="LowPolyConvexURL.gltf" physx-hidden-collision="" visible="false"></a-entity>
@@ -212,7 +210,7 @@ Creates a driver which exerts force to return the joint to the specified (curren
 
 This can only be used on an entity with a `physx-joint` component. Currently only supports **D6** joint type. E.g.
 
-```
+```html
 <a-box physx-body>
    <a-entity position="0.2 0.3 0.4" rotation="0 90 0"
              physx-joint="type: D6; target: #other-body"
@@ -353,7 +351,7 @@ The position and rotation of the `physx-joint` will be used to create the corres
 
 Here's a simplified version of the stapler from the [physics playground demo]()
 
-```
+```html
 <a-entity id="stapler">
   <a-entity id="stapler-top" physx-body="type: dynamic" class="grab-root">
     <a-entity class="clickable" propogate-grab="" gltf-part-plus="src: #asset-stapler; part: Top"></a-entity>
