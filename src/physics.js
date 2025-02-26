@@ -473,7 +473,6 @@ AFRAME.registerSystem('physx', {
     if (instance instanceof Promise) instance = await instance;
     this.PhysX = instance;
     PhysX = instance;
-    globalThis.PhysX = instance;
     await initialized;
     self.startPhysXScene()
     self.physXInitialized = true
