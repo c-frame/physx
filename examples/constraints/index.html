@@ -192,7 +192,7 @@
                physx-force-pushable>
           <a-entity
             physx-joint="type: D6"
-            physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 0.2"
+            physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 0.2; stiffness: 20"
             physx-joint-constraint__y="constrainedAxes: y; linearLimit: -1 0; stiffness: 20"
             physx-joint-constraint__rotation="lockedAxes: twist,swing"
           ></a-entity>
