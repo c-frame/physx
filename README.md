@@ -9,28 +9,45 @@ For examples of usage, see:
 
 ## Installation
 
-There is just one main JS module, `physx.js`, which triggers download of a specified additional wasm module.
+There is just one main JS module, `physx.min.js`, which triggers download of a specified additional wasm module.
 
-The URL for the PhysX wasm module is specified on the `physx` component schema - but the default settings should work for most cases.
+The URL for the PhysX wasm module needs to be specified on the `physx` component schema.
 
 ### Installation via Script Tags
 
-You can either download the module from the `dist`  directory of this repo and include them like this:
+You can either download the module from the `dist` directory of this repo and the wasm file from the `wasm` directory and include them like this:
 
 ```
-<script src="physx.js"></script>
+<script src="physx.min.js"></script>
+<a-scene physx="autoLoad: true; wasmUrl: physx.release.wasm">
 ```
 
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
 ```
-<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@latest/dist/physx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/dist/physx.min.js"></script>
+<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/wasm/physx.release.wasm">
 ```
 
 ### Installation via npm
 
-Not supported yet - if you want this, please raise an issue.  PRs also welcome!
+Install the dependency:
 
+```sh
+npm install @c-frame/physx
+```
+
+In your project import it:
+
+```js
+import "@c-frame/physx";
+```
+
+Copy `node_modules/@c-frame/physx/wasm` maybe in your public folder and then reference it like this:
+
+```html
+<a-scene physx="autoLoad: true; wasmUrl: /wasm/physx.release.wasm">
+```
 
 
 ## Build
@@ -45,9 +62,11 @@ To run for development purposes, run:
 
 Examples can be viewed at /examples
 
-To build (both development & production builds), run:
+To build (non minified and minified builds), run:
 
 `npm run dist`
+
+You don't need to run it in development.
 
 
 ## System `physx` 
@@ -57,7 +76,7 @@ Implements the a physics system using an emscripten compiled PhysX engine.
 If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```
-<a-scene physx="autoLoad: true">
+<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.x/wasm/physx.release.wasm">
  <a-assets><a-asset-item id="#mymodel" src="..."></a-asset-item></a-assets>
 
  <a-box physx-body="type: static" color="green" position="0 0 -3"></a-box>
@@ -88,7 +107,7 @@ It is also helpful to refer to the [NVIDIA PhysX documentation](https://gamework
 | throttle              | number           | 10                                                           | Throttle for running the physics simulation. On complex scenes, you can increase this to avoid dropping video frames |
 | autoLoad              | boolean          | false                                                        | If true, the PhysX will automatically be loaded and started. If false, you will have to call `startPhysX()` manually to load and start the physics engine |
 | speed                 | number           | 1                                                            | Simulation speed multiplier. Increase or decrease to speed up or slow down simulation time |
-| wasmUrl               | string           | https://cdn.jsdelivr.net/gh/c-frame/physx/wasm/physx.release.wasm | URL for the PhysX WASM bundle.                               |
+| wasmUrl               | string           | ../../wasm/physx.release.wasm (only useful for the examples) | URL for the PhysX WASM bundle. Be sure this matches the script version. |
 | useDefaultScene       | boolean          | true                                                         | If true, sets up a default scene with a ground plane and bounding cylinder. |
 | wrapBounds            | boolean          | false                                                        | NYI                                                          |
 | groundCollisionLayers | string           |                                                              | Which collision layers the ground belongs to                 |
