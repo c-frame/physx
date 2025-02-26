@@ -1484,8 +1484,8 @@ AFRAME.registerComponent('physx-joint-constraint', {
           joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eLIMITED)
           const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
           const limitPair = new PhysX.PxJointAngularLimitPair(
-            -THREE.MathUtils.degToRad(this.data.angularLimit.y),
-            -THREE.MathUtils.degToRad(this.data.angularLimit.x),
+            -THREE.MathUtils.degToRad(this.data.twistLimit.y),
+            -THREE.MathUtils.degToRad(this.data.twistLimit.x),
             spring)
           limitPair.restitution = this.data.restitution;
           joint.setTwistLimit(limitPair)
