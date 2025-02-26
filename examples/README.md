@@ -11,7 +11,7 @@ This set of examples is based on [these examples from aframe-physics-system](htt
 | Construct a [compound shape](https://c-frame.github.io/aframe-physics-system/#shape) and simulate collision with a ground plane. | [**OK**](https://c-frame.github.io/physx/examples/compound/index.html) |
 | Demonstration of many PhysX constraints including Fixed, Revolute, Spherical and Prismatic constraints. | [**OK**](https://c-frame.github.io/physx/examples/constraints/index.html) |
 | Bounce simulation with restitution (bounciness) of 1.        | [**OK**](https://c-frame.github.io/physx/examples/materials/index.html) |
-| Four vertical [springs](https://c-frame.github.io/aframe-physics-system/#spring) each between two boxes with an assortment of damping and stiffness values | [**Not working**](https://c-frame.github.io/physx/examples/spring/index.html) |
+| Four vertical [springs](https://c-frame.github.io/aframe-physics-system/#spring) each between two boxes with an assortment of damping and stiffness values | [**OK**](https://c-frame.github.io/physx/examples/spring/index.html) |
 | Apply [strong impulse](https://c-frame.github.io/aframe-physics-system/#using-the-cannonjs-api) to a cube when the user clicks with a mouse. Cubes are arranged in four 4x3 walls. | [**OK**](https://c-frame.github.io/physx/examples/stress/index.html) |
 | Animate a long wall moving along the z-axis along the initial view direction. | [**OK**](https://c-frame.github.io/physx/examples/sweeper/index.html) |
 | Remove a [dynamic body](https://c-frame.github.io/aframe-physics-system/#dynamic-body-and-static-body) from the scene after 100 frames | [**OK**](https://c-frame.github.io/physx/examples/ttl/index.html) |

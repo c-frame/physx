@@ -12,20 +12,7 @@
     <div class="text-overlay">
       <p>Four vertical springs each between two boxes with an
         assortment of damping and stiffness values using PhysX.</p>
-      <p>These are not working currently.  Setting damping to any value other than zero
-         seems to result in the block falling indefinitely without constraint.</p>
     </div>
-    <!-- Setting damping to a very high value results in the block falling at a very low velocity,
-         but it still seems to follow downwards for ever.
-         My understanding of how this *should* work:
-         - Stiffness should control the extent to which positional offset affects aceleration
-         - Damping should control the extent to which non-zero velocity affects aceleration
-         https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Joints.html#soft-constraints
-
-         This doesn't seem to work, though...
-         - Setting damping to a tiny non-zero value gives radically different behaviour from zero.
-         - Setting 
-        -->
         <a class="code-link"
         target="_blank"
         href="https://github.com/c-frame/physx/blob/master/examples/spring/index.html">

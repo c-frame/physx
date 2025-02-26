@@ -1370,60 +1370,41 @@ AFRAME.registerComponent('physx-joint-driver', {
   }
 })
 
-// Adds a constraint to a [`physx-joint`](#physx-joint). Currently only **D6**
-// joints are supported.
-//
-// Can only be used on an entity with the `physx-joint` component. You can set
-// multiple constraints per joint. Note that in order to specify attributes of
-// individual axes, you will need to use multiple constraints. For instance:
-//
-//```
-// <a-box physx-body>
-//   <a-entity physx-joint="type: D6"
-//             physx-joint-constraint__xz="constrainedAxes: x,z; linearLimit: -1 20"
-//             physx-joint-constraint__y="constrainedAxes: y; linearLimit: 0 3; stiffness: 3"
-//             physx-joint-constraint__rotation="lockedAxes: twist,swing"></a-entity>
-// </a-box>
-//```
-//
-// In the above example, the box will be able to move from -1 to 20 in both the
-// x and z direction. It will be able to move from 0 to 3 in the y direction,
-// but this will be a soft constraint, subject to spring forces if the box goes
-// past in the y direction. All rotation will be locked. (Note that since no
-// target is specified, it will use the scene default target, effectively
-// jointed to joint's initial position in the world)
+// See README.md for examples
 AFRAME.registerComponent('physx-joint-constraint', {
   multiple: true,
   schema: {
     // Which axes are explicitly locked by this constraint and can't be moved at all.
     // Should be some combination of `x`, `y`, `z`, `twist`, `swing`
-    lockedAxes: {type: 'array', default: []},
+    lockedAxes: {type: 'array', default: []}, // for D6 joint type
 
     // Which axes are constrained by this constraint. These axes can be moved within the set limits.
     // Should be some combination of `x`, `y`, `z`, `twist`, `swing`
-    constrainedAxes: {type: 'array', default: []},
+    constrainedAxes: {type: 'array', default: []}, // for D6 joint type
 
     // Which axes are explicitly freed by this constraint. These axes will not obey any limits set here.
     // Should be some combination of `x`, `y`, `z`, `twist`, `swing`
-    freeAxes: {type: 'array', default: []},
+    freeAxes: {type: 'array', default: []}, // for D6 joint type
 
     // Limit on linear movement. Only affects `x`, `y`, and `z` axes.
     // First vector component is the minimum allowed position
-    linearLimit: {type: 'vec2'},
+    linearLimit: {type: 'vec2'}, // for D6 and Prismatic joint type
+
+    // Limit on angular movement. Example: `-110 80` to move between -110 and 80 degrees
+    angularLimit: {type: 'vec2'}, // for Revolute joint type
 
     // Two angles specifying a cone in which the joint is allowed to swing, like
     // a pendulum.
-    limitCone: {type: 'vec2'},
+    limitCone: {type: 'vec2'}, // for D6 joint type
 
     // Minimum and maximum angles that the joint is allowed to twist
-    twistLimit: {type: 'vec2'},
+    twistLimit: {type: 'vec2'}, // for D6 joint type
 
     // Spring damping for soft constraints
     damping: {default: 0.0},
     // Spring restitution for soft constraints
     restitution: {default: 0.0},
-    // If greater than 0, will make this joint a soft constraint, and use a
-    // spring force model
+    // If greater than 0, will make this joint a soft constraint, and use a spring force model
     stiffness: {default: 0.0},
   },
   events: {
@@ -1432,72 +1413,97 @@ AFRAME.registerComponent('physx-joint-constraint', {
     }
   },
   init() {
+    this.propsInitialized = false;
     this.el.setAttribute('phsyx-custom-constraint', "")
   },
   setJointConstraint() {
-    if (this.el.components['physx-joint'].data.type !== 'D6') {
-      console.warn("Only D6 joint constraints supported at the moment")
+    const jointType = this.el.components['physx-joint'].data.type;
+    if (jointType !== 'D6' && jointType !== 'Revolute' && jointType !== 'Prismatic') {
+      console.warn("Only D6, Revolute and Prismatic joint constraints supported at the moment")
       return;
     }
 
-    if (!this.constrainedAxes) this.update();
+    if (!this.propsInitialized) this.update();
 
-    let joint = this.el.components['physx-joint'].joint;
+    const joint = this.el.components['physx-joint'].joint;
 
-    let llimit = () => {
-      let l = new PhysX.PxJointLinearLimitPair(new PhysX.PxTolerancesScale(), this.data.linearLimit.x, this.data.linearLimit.y);
-      l.stiffness = this.data.stiffness;
-      l.damping = this.data.damping;
-      // Setting stiffness automatically sets restitution to the same value.
-      // Is it correct, then to override with default restitution value of 0, even if
-      // no restitution value was specified?
-      // Not sure - but commenting out this line doesn't help with problems observed with spring behaviour.
-      // Seem spring.html example.
-      l.restitution = this.data.restitution;
-      return l
+    if (jointType === 'Revolute') {
+      // https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxapi/files/classPxJointAngularLimitPair.html
+      const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+      const limitPair = new PhysX.PxJointAngularLimitPair(
+        -THREE.MathUtils.degToRad(this.data.angularLimit.y),
+        -THREE.MathUtils.degToRad(this.data.angularLimit.x),
+        spring)
+      limitPair.restitution = this.data.restitution;
+      joint.setLimit(limitPair);
+      joint.setRevoluteJointFlag(PhysX.PxRevoluteJointFlag.eLIMIT_ENABLED, true);
     }
 
-    for (let axis of this.freeAxes)
-    {
-      joint.setMotion(axis, PhysX.PxD6Motion.eFREE)
+    if (jointType === 'Prismatic') {
+      const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+      const limitPair = new PhysX.PxJointLinearLimitPair(-this.data.linearLimit.y, -this.data.linearLimit.x, spring);
+      limitPair.restitution = this.data.restitution;
+      joint.setLimit(limitPair);
+      joint.setPrismaticJointFlag(PhysX.PxPrismaticJointFlag.eLIMIT_ENABLED, true);
     }
 
-    for (let axis of this.lockedAxes)
-    {
-      joint.setMotion(axis, PhysX.PxD6Motion.eLOCKED)
-    }
+    if (jointType === 'D6') {
+      const createLinearLimit = (axis) => {
+        const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+        let limitPair;
+        if (axis === PhysX.PxD6Axis.eX || axis === PhysX.PxD6Axis.eZ) {
+          limitPair = new PhysX.PxJointLinearLimitPair(-this.data.linearLimit.y, -this.data.linearLimit.x, spring);
+        } else {
+          limitPair = new PhysX.PxJointLinearLimitPair(this.data.linearLimit.x, this.data.linearLimit.y, spring);
+        }
+        limitPair.restitution = this.data.restitution;
+        return limitPair;
+      }
 
-    for (let axis of this.constrainedAxes)
-    {
-      if (axis === PhysX.PxD6Axis.eX || axis === PhysX.PxD6Axis.eY || axis === PhysX.PxD6Axis.eZ)
+      for (let axis of this.freeAxes)
       {
+        joint.setMotion(axis, PhysX.PxD6Motion.eFREE)
+      }
+
+      for (let axis of this.lockedAxes)
+      {
+        joint.setMotion(axis, PhysX.PxD6Motion.eLOCKED)
+      }
+
+      for (let axis of this.constrainedAxes)
+      {
+        if (axis === PhysX.PxD6Axis.eX || axis === PhysX.PxD6Axis.eY || axis === PhysX.PxD6Axis.eZ)
+        {
+          joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
+          joint.setLinearLimit(axis, createLinearLimit(axis))
+          continue;
+        }
+
+        if (axis === PhysX.PxD6Axis.eTWIST)
+        {
+          joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eLIMITED)
+          const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+          const limitPair = new PhysX.PxJointAngularLimitPair(
+            -THREE.MathUtils.degToRad(this.data.angularLimit.y),
+            -THREE.MathUtils.degToRad(this.data.angularLimit.x),
+            spring)
+          limitPair.restitution = this.data.restitution;
+          joint.setTwistLimit(limitPair)
+          continue;
+        }
+
         joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
-        joint.setLinearLimit(axis, llimit())
-        continue;
+        const spring = new PhysX.PxSpring(this.data.stiffness, this.data.damping);
+        const cone = new PhysX.PxJointLimitCone(this.data.limitCone.x, this.data.limitCone.y, spring)
+        cone.restitution = this.data.restitution;
+        joint.setSwingLimit(cone)
       }
-
-      if (axis === PhysX.eTWIST)
-      {
-        joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eLIMITED)
-        let pair = new PhysX.PxJointAngularLimitPair(this.data.limitTwist.x, this.data.limitTwist.y)
-        pair.stiffness = this.data.stiffness
-        pair.damping = this.data.damping
-        pair.restitution = this.data.restitution
-        joint.setTwistLimit(pair)
-        continue;
-      }
-
-      joint.setMotion(axis, PhysX.PxD6Motion.eLIMITED)
-      let cone = new PhysX.PxJointLimitCone(this.data.limitCone.x, this.data.limitCone.y)
-      cone.damping = this.data.damping
-      cone.stiffness = this.data.stiffness
-      cone.restitution = this.data.restitution
-      joint.setSwingLimit(cone)
     }
   },
   update(oldData) {
     if (!PhysX) return;
 
+    this.propsInitialized = true;
     this.constrainedAxes = PhysXUtil.axisArrayToEnums(this.data.constrainedAxes)
     this.lockedAxes = PhysXUtil.axisArrayToEnums(this.data.lockedAxes)
     this.freeAxes = PhysXUtil.axisArrayToEnums(this.data.freeAxes)
@@ -1565,6 +1571,11 @@ AFRAME.registerComponent('physx-joint', {
 
     // When used with a D6 type, sets up a "soft" fixed joint. E.g., for grabbing things
     softFixed: {default: false},
+
+    // Kinematic projection, which forces joint back into alignment when the solver fails.
+    // First component is the linear tolerance (in meters), second component is angular tolerance (in degrees). Set both components are >= 0
+    // See: https://nvidiagameworks.github.io/PhysX/4.1/documentation/physxguide/Manual/Joints.html#projection
+    projectionTolerance: {type: 'vec2', default: {x: -1, y: -1}},
   },
   events: {
     constraintbreak: function(e) {
@@ -1622,6 +1633,16 @@ AFRAME.registerComponent('physx-joint', {
     }
 
     this.joint.setConstraintFlag(PhysX.PxConstraintFlag.eCOLLISION_ENABLED, this.data.collideWithTarget)
+
+    if (this.data.projectionTolerance.x >= 0 && this.data.projectionTolerance.y >= 0) {
+      this.joint.setProjectionLinearTolerance(this.data.projectionTolerance.x)
+      this.joint.setProjectionAngularTolerance(THREE.MathUtils.degToRad(this.data.projectionTolerance.y))
+      this.joint.setConstraintFlag(PhysX.PxConstraintFlag.ePROJECTION, true);
+    }
+    else
+    {
+      this.joint.setConstraintFlag(PhysX.PxConstraintFlag.ePROJECTION, false);
+    }
 
     if (this.el.hasAttribute('phsyx-custom-constraint')) return;
 

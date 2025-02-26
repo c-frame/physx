@@ -24,6 +24,10 @@ module.exports = {
   },
 
   devServer: {
+    server: {
+      type: "https"
+    },
+
     static: {
       directory: path.join(__dirname, ''),
     },
