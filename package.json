@@ -22,6 +22,7 @@
     "physics",
     "A-Frame",
     "aframe",
+    "aframe-component",
     "threejs",
     "webXR",
     "physx"
