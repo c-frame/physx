@@ -1,3 +1,6 @@
+/* global AFRAME THREE */
+/* eslint-disable prefer-const, new-cap */
+
 // This is a modification of the physics/PhysX libraries
 //   created by Lee Stemkoski
 //   from the VARTISTE project @ https://vartiste.xyz/ 
@@ -12,9 +15,6 @@
 // ======================================================================
 
 let PHYSX = require('./physx.release.js');
-
-// patching in Pool functions
-var poolSize = 0
 
 function sysPool(name, type) {
     if (this.system._pool[name]) return this.system._pool[name]
@@ -142,7 +142,7 @@ function whenLoadedAll(entities, fn) {
 }
 
 function awaitLoadingSingle(entity) {
-  return new Promise((r, e) => whenLoadedSingle(entity, r))
+  return new Promise((resolve, _reject) => whenLoadedSingle(entity, resolve))
 }
 
 async function awaitLoadingAll(entities) {
@@ -157,7 +157,7 @@ Util.whenComponentInitialized = function(el, component, fn) {
     return Promise.resolve(fn ? fn() : undefined)
   }
 
-  return new Promise((r, e) => {
+  return new Promise((resolve, _reject) => {
     if (el && el.components[component] && el.components[component].initialized) {
       return Promise.resolve(fn ? fn() : undefined)
     }
@@ -166,7 +166,7 @@ Util.whenComponentInitialized = function(el, component, fn) {
       if (e.detail.name === component) {
         el.removeEventListener('componentinitialized', listener);
         if (fn) fn();
-        r();
+        resolve();
       }
     };
     el.addEventListener('componentinitialized', listener)
@@ -340,7 +340,7 @@ AFRAME.registerSystem('physx', {
     groundCollisionLayers: {default: [2]},
 
     // Which collision layers will collide with the ground
-    groundCollisionMask: {default: [1,2,3,4]},
+    groundCollisionMask: {default: [1, 2, 3, 4]},
 
     // Global gravity vector
     gravity: {type: 'vec3', default: {x: 0, y: -9.8, z: 0}},
@@ -370,8 +370,8 @@ AFRAME.registerSystem('physx', {
     this.el.append(defaultTarget)
     this.defaultTarget = defaultTarget
 
-    this.initializePhysX = new Promise((r, e) => {
-      this.fulfillPhysXPromise = r;
+    this.initializePhysX = new Promise((resolve, _reject) => {
+      this.fulfillPhysXPromise = resolve;
     })
 
     this.initStats()
@@ -459,7 +459,7 @@ AFRAME.registerSystem('physx', {
     this.running = true;
     let self = this;
     let resolveInitialized;
-    let initialized = new Promise((r, e) => resolveInitialized = r)
+    let initialized = new Promise((resolve, _reject) => { resolveInitialized = resolve; });
     let instance = PHYSX({
         locateFile() {
             return self.findWasm()
@@ -625,14 +625,14 @@ AFRAME.registerSystem('physx', {
     let spherical = new THREE.Spherical();
     spherical.radius = 30;
     let quat = new THREE.Quaternion();
-    let pos = new THREE.Vector3;
+    let pos = new THREE.Vector3();
     let euler = new THREE.Euler();
 
     for (let i = 0; i < numPlanes; ++i)
     {
       spherical.theta = i * 2.0 * Math.PI / numPlanes;
       pos.setFromSphericalCoords(spherical.radius, spherical.theta, spherical.phi)
-      pos.x = - pos.y
+      pos.x = -pos.y
       pos.y = 0;
       euler.set(0, spherical.theta, 0);
       quat.setFromEuler(euler)
@@ -843,7 +843,7 @@ AFRAME.registerComponent('physx-material', {
     // Which collision layers this shape is present on
     collisionLayers: {default: [1], type: 'array'},
     // Array containing all layers that this shape should collide with
-    collidesWithLayers: {default: [1,2,3,4], type: 'array'},
+    collidesWithLayers: {default: [1, 2, 3, 4], type: 'array'},
 
     // If `collisionGroup` is greater than 0, this shape will *not* collide with
     // any other shape with the same `collisionGroup` value
@@ -1084,8 +1084,8 @@ AFRAME.registerComponent('physx-body', {
     let g = mesh.geometry.attributes.position
     if (!g) return;
     if (g.count < 3) return;
-    if (g.itemSize != 3) return;
-    let t = new THREE.Vector3;
+    if (g.itemSize !== 3) return;
+    let t = new THREE.Vector3();
 
     if (rootAncestor)
     {
@@ -1113,7 +1113,7 @@ AFRAME.registerComponent('physx-body', {
       }
     }
 
-    let worldScale = new THREE.Vector3;
+    let worldScale = new THREE.Vector3();
     let worldBasis = (rootAncestor || mesh);
     worldBasis.updateMatrixWorld();
     worldBasis.getWorldScale(worldScale);
@@ -1301,7 +1301,7 @@ AFRAME.registerComponent('physx-joint-driver', {
       this.joint.setMotion(enumKey, PhysX.PxD6Motion.eFREE)
     }
 
-    let drive = new PhysX.PxD6JointDrive;
+    let drive = new PhysX.PxD6JointDrive();
     drive.stiffness = this.data.stiffness;
     drive.damping = this.data.damping;
     drive.forceLimit = this.data.forceLimit;
@@ -1602,10 +1602,10 @@ AFRAME.registerComponent('physx-joint', {
 
     this.bodyEl = parentEl
 
-    this.worldHelper = new THREE.Object3D;
-    this.worldHelperParent = new THREE.Object3D;
+    this.worldHelper = new THREE.Object3D();
+    this.worldHelperParent = new THREE.Object3D();
     this.el.sceneEl.object3D.add(this.worldHelperParent);
-    this.targetScale = new THREE.Vector3(1,1,1)
+    this.targetScale = new THREE.Vector3(1, 1, 1)
     this.worldHelperParent.add(this.worldHelper)
 
     if (!this.data.target) {
@@ -1622,7 +1622,9 @@ AFRAME.registerComponent('physx-joint', {
       this.joint.release();
       this.joint = null;
       this.bodyEl.components['physx-body'].rigidBody.wakeUp()
-      if (this.data.target.components['physx-body'].rigidBody.wakeUp) this.data.target.components['physx-body'].rigidBody.wakeUp()
+      if (this.data.target.components['physx-body'].rigidBody.wakeUp) {
+        this.data.target.components['physx-body'].rigidBody.wakeUp()
+      }
     }
   },
   update() {
@@ -1650,7 +1652,6 @@ AFRAME.registerComponent('physx-joint', {
     switch (this.data.type)
     {
       case 'D6':
-      {
         if (this.data.softFixed)
         {
           this.joint.setMotion(PhysX.PxD6Axis.eX, PhysX.PxD6Motion.eFREE)
@@ -1660,7 +1661,7 @@ AFRAME.registerComponent('physx-joint', {
           this.joint.setMotion(PhysX.PxD6Axis.eSWING2, PhysX.PxD6Motion.eFREE)
           this.joint.setMotion(PhysX.PxD6Axis.eTWIST, PhysX.PxD6Motion.eFREE)
 
-          let drive = new PhysX.PxD6JointDrive;
+          let drive = new PhysX.PxD6JointDrive();
           drive.stiffness = 1000;
           drive.damping = 500;
           drive.forceLimit = 1000;
@@ -1674,8 +1675,7 @@ AFRAME.registerComponent('physx-joint', {
           this.joint.setDrivePosition({translation: {x: 0, y: 0, z: 0}, rotation: {w: 1, x: 0, y: 0, z: 0}}, true)
           this.joint.setDriveVelocity({x: 0.0, y: 0.0, z: 0.0}, {x: 0, y: 0, z: 0}, true);
         }
-      }
-      break;
+        break;
     }
   },
   getTransform(el) {
@@ -1714,7 +1714,7 @@ AFRAME.registerComponent('physx-joint', {
 
 AFRAME.registerSystem('physx-contact-event', {
   init() {
-    this.worldHelper = new THREE.Object3D;
+    this.worldHelper = new THREE.Object3D();
     this.el.sceneEl.object3D.add(this.worldHelper)
   }
 })
