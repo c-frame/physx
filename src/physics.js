@@ -51,9 +51,7 @@ class Pool {
 
 // ==================================================================================================
 
-// patching in required Util functions from VARTISTE
-
-Util = {}
+const Util = {}
 
 Pool.init(Util);
 
