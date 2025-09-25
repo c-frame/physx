@@ -1788,7 +1788,7 @@ AFRAME.registerComponent('physx-contact-event', {
     }
   },
   init() {
-    VARTISTE.Pool.init(this)
+    Pool.init(this)
 
     this.eventDetail = {
       impulse: 0.0,
