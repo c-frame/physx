@@ -162,8 +162,9 @@
         <a-sphere color="#F00"
                radius="0.125"
                position="0 1 0"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
                physx-body
-               physx-force-pushable>
+               physx-force-pushable="force: 20">
                <a-entity
                  physx-joint="type: Prismatic; target:#slider-target; collideWithTarget: true"
                  physx-joint-constraint="linearLimit: -0.2 0.8; damping: 20; stiffness: 100">
