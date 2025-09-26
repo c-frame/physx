@@ -1170,28 +1170,20 @@ AFRAME.registerComponent('physx-body', {
       },
       o => {
       if (o.geometry) {
-        let geometry;
-        if (false && o.el && o.el.hasAttribute('geometry'))
-        {
-          geometry = this.createGeometry(o);
-        }
-        else
-        {
-          geometry = this.createConvexMeshGeometry(o, this.el.object3D);
-        }
+        const geometry = this.createConvexMeshGeometry(o, this.el.object3D);
         if (!geometry) {
           console.warn("Couldn't create geometry", o)
           return;
         }
 
-        let material, materialData;
+        let materialData;
         if (o.el && o.el.hasAttribute('physx-material'))
         {
           materialData = o.el.getAttribute('physx-material')
         }
         else
         {
-            materialData = this.el.components['physx-material'].data
+          materialData = this.el.components['physx-material'].data
         }
         let shape = this.createShape(physics, geometry, materialData)
 
