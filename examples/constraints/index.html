@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Examples • Constraints PhysX</title>
-    <meta name="description" content="A-Frame Physics - Constraints">
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.5.0/dist/aframe-environment-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls@0.4.3/dist/aframe-blink-controls.min.js"></script>
@@ -26,10 +25,10 @@
     <a-scene environment
              physx="autoLoad: true; delay: 1000; useDefaultScene: false;stats: panel">
       <a-entity id="player">
-        <a-entity camera look-controls wasd-controls="acceleration: 30" position="0 1.6 0">
+        <a-entity camera look-controls wasd-controls="acceleration: 10" position="0 1.6 0">
           <a-entity cursor
             raycaster="objects:[physx-force-pushable]"
-            position="0 0 -0.5"
+            position="0 0 -0.4"
             geometry="primitive: circle; radius: 0.01; segments: 4;"
             material="color: #FF4444; shader: flat">
           </a-entity>
@@ -200,6 +199,69 @@
           ></a-entity>
         </a-box>
       </a-entity>
+
+      <!-- TriangleMeshGeometry -->
+      <a-entity position="-7 1.5 1" rotation="0 -90 0">
+        <a-text value="open-ended cylinder\n(TriangleMeshGeometry)" rotation="0 180 0" position="0 1 0.5" align="center"></a-text>
+        <!-- table -->
+        <a-box width="1" height="0.1" depth="1" color="#777"
+               position="0 -0.05 0"
+               physx-body="type: static"></a-box>
+        <!-- wall -->
+        <a-box width="1" height="0.1" depth="0.5" color="#777"
+               rotation="90 0 0"
+               position="0 0.25 0.55"
+               wireframe="true"
+               physx-body="type: static"></a-box>
+        <a-entity
+          geometry="primitive: cylinder; openEnded: true; height: 0.3; radius: 0.04"
+          material="color: gray; side: double"
+          physx-body="type: static"
+          position="0 0.015 0"
+          rotation="90 0 0"
+        ></a-entity>
+        <!-- facing tube -->
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="0 0.005 -0.3"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+        <!-- facing tube on the sides -->
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="0.1 0.005 -0.3"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="-0.1 0.005 -0.3"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+        <!-- facing tube on the other side -->
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="0 0.005 0.3"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+        <!-- sides -->
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="-0.3 0.005 0"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+        <a-sphere color="#F00"
+               radius="0.01"
+               position="0.3 0.005 0"
+               physx-contact-sound="src: ../assets/sfx-clock.wav"
+               physx-body
+               physx-force-pushable="force: 15"></a-sphere>
+      </a-entity>
+
     </a-scene>
   </body>
 </html>
