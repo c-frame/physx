@@ -1081,6 +1081,13 @@ AFRAME.registerComponent('physx-body', {
           this.el.object3D.getWorldScale(worldScale);
           return new PhysX.PxBoxGeometry(worldScale.x * (geometry.width / 2), worldScale.y * (geometry.height / 2), worldScale.z * (geometry.depth / 2))
         }
+        case 'cylinder':
+          if (geometry.openEnded) {
+            // For open-ended cylinders, build a triangle mesh to collide inside and outside
+            return this.createTriangleMeshGeometry(o.el.getObject3D('mesh'));
+          } else {
+            return this.createConvexMeshGeometry(o.el.getObject3D('mesh'));
+          }
         default:
           return this.createConvexMeshGeometry(o.el.getObject3D('mesh'));
       }
@@ -1126,6 +1133,40 @@ AFRAME.registerComponent('physx-body', {
     worldBasis.getWorldScale(worldScale);
     let convexMesh = this.system.cooking.createConvexMesh(vectors, this.system.physics)
     return new PhysX.PxConvexMeshGeometry(convexMesh, new PhysX.PxMeshScale({x: worldScale.x, y: worldScale.y, z: worldScale.z}, {w: 1, x: 0, y: 0, z: 0}), new PhysX.PxConvexMeshGeometryFlags(PhysX.PxConvexMeshGeometryFlag.eTIGHT_BOUNDS.value))
+  },
+  createTriangleMeshGeometry(mesh) {
+    const outerGeom = mesh.geometry;
+    const innerGeom = outerGeom.clone();
+    innerGeom.scale(-1, 1, 1); // flip normals inward
+    const combinedGeom = THREE.BufferGeometryUtils.mergeGeometries([outerGeom, innerGeom]);
+    innerGeom.dispose();
+    const combinedGeomMergeVertices = THREE.BufferGeometryUtils.mergeVertices(combinedGeom);
+    combinedGeom.dispose();
+
+    const positions = combinedGeomMergeVertices.attributes.position;
+    const indices = combinedGeomMergeVertices.index.array;
+
+    if (!positions) return;
+    if (positions.count < 3) return;
+
+    const verticesVec = new PhysX.PxVec3Vector();
+    const t = new THREE.Vector3();
+    for (let i = 0; i < positions.count; ++i) {
+      t.fromBufferAttribute(positions, i)
+      verticesVec.push_back(Object.assign({}, t));
+    }
+
+    const triVec = new PhysX.PxU32Vector();
+    for (let i = 0; i < indices.length; i++) {
+      triVec.push_back(indices[i]);
+    }
+
+    combinedGeomMergeVertices.dispose();
+
+    const worldScale = new THREE.Vector3();
+    mesh.getWorldScale(worldScale);
+    const triMesh = this.system.cooking.createTriMesh(verticesVec, triVec, this.system.physics);
+    return new PhysX.PxTriangleMeshGeometry(triMesh, new PhysX.PxMeshScale({x: worldScale.x, y: worldScale.y, z: worldScale.z}, {w: 1, x: 0, y: 0, z: 0}), new PhysX.PxMeshGeometryFlags(PhysX.PxMeshGeometryFlag.eDOUBLE_SIDED.value));
   },
   createShape(physics, geometry, materialData)
   {
