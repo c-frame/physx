@@ -1070,9 +1070,17 @@ AFRAME.registerComponent('physx-body', {
       switch(geometry.primitive)
       {
         case 'sphere':
-          return new PhysX.PxSphereGeometry(geometry.radius * this.el.object3D.scale.x * 0.98)
+        {
+          const worldScale = new THREE.Vector3();
+          this.el.object3D.getWorldScale(worldScale);
+          return new PhysX.PxSphereGeometry(geometry.radius * worldScale.x * 0.98)
+        }
         case 'box':
-          return new PhysX.PxBoxGeometry(geometry.width / 2, geometry.height / 2, geometry.depth / 2)
+        {
+          const worldScale = new THREE.Vector3();
+          this.el.object3D.getWorldScale(worldScale);
+          return new PhysX.PxBoxGeometry(worldScale.x * (geometry.width / 2), worldScale.y * (geometry.height / 2), worldScale.z * (geometry.depth / 2))
+        }
         default:
           return this.createConvexMeshGeometry(o.el.getObject3D('mesh'));
       }
@@ -1115,7 +1123,6 @@ AFRAME.registerComponent('physx-body', {
 
     let worldScale = new THREE.Vector3();
     let worldBasis = (rootAncestor || mesh);
-    worldBasis.updateMatrixWorld();
     worldBasis.getWorldScale(worldScale);
     let convexMesh = this.system.cooking.createConvexMesh(vectors, this.system.physics)
     return new PhysX.PxConvexMeshGeometry(convexMesh, new PhysX.PxMeshScale({x: worldScale.x, y: worldScale.y, z: worldScale.z}, {w: 1, x: 0, y: 0, z: 0}), new PhysX.PxConvexMeshGeometryFlags(PhysX.PxConvexMeshGeometryFlag.eTIGHT_BOUNDS.value))
