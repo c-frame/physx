@@ -742,8 +742,10 @@ AFRAME.registerSystem('physx', {
 
     for (let [obj, body] of this.objects)
     {
-        // no updates needed for static objects.
+        // no updates needed for static and kinematic objects.
         if (obj.el.components['physx-body'].data.type === 'static') continue;
+        if (obj.el.components['physx-body'].data.type === 'kinematic') continue;
+        if (obj.el.components['physx-body'].isKinematic) continue;
 
         const transform = body.getGlobalPose()
         this.worldHelper.position.copy(transform.translation);
@@ -952,6 +954,7 @@ AFRAME.registerComponent('physx-body', {
     stateadded: function(e) {
       if (e.detail === 'grabbed') {
         this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eKINEMATIC, true)
+        this.isKinematic = true
       }
     },
     stateremoved: function(e) {
@@ -962,6 +965,7 @@ AFRAME.registerComponent('physx-body', {
         if (this.data.type !== 'kinematic')
         {
           this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eKINEMATIC, false)
+          this.isKinematic = false
         }
       }
     },
@@ -1042,6 +1046,7 @@ AFRAME.registerComponent('physx-body', {
       this.rigidBody.setAngularDamping(this.data.angularDamping)
       this.rigidBody.setLinearDamping(this.data.linearDamping)
       this.rigidBody.setRigidBodyFlag(PhysX.PxRigidBodyFlag.eKINEMATIC, false)
+      this.isKinematic = false
     }
 
     if (this.data.highPrecision)
