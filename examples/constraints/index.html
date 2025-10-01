@@ -214,7 +214,7 @@
                wireframe="true"
                physx-body="type: static"></a-box>
         <a-entity
-          geometry="primitive: cylinder; openEnded: true; height: 0.3; radius: 0.04"
+          geometry="primitive: cylinder; openEnded: true; height: 0.3; radius: 0.04; thetaStart: 1; thetaLength: 359"
           material="color: gray; side: double"
           physx-body="type: static"
           position="0 0.015 0"
@@ -260,6 +260,7 @@
                physx-contact-sound="src: ../assets/sfx-clock.wav"
                physx-body
                physx-force-pushable="force: 15"></a-sphere>
+        <a-cylinder id="stick" radius="0.01" height="0.3" position="0.3 0.01 0" rotation="0 0 90" physx-body></a-cylinder>
       </a-entity>
 
     </a-scene>
