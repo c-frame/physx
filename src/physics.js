@@ -1025,7 +1025,6 @@ AFRAME.registerComponent('physx-body', {
   init() {
     this.system = this.el.sceneEl.systems.physx
     this.physxRegisteredPromise = this.system.registerComponentBody(this, {type: this.data.type})
-    this.el.setAttribute('grab-options', 'scalable', false)
 
     this.kinematicMove = this.kinematicMove.bind(this)
     if (this.el.sceneEl.systems['button-caster'])
