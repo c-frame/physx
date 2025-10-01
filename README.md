@@ -69,7 +69,7 @@ You don't need to run it in development.
 
 ## System `physx` 
 
-Implements the a physics system using an emscripten compiled PhysX engine.
+Implements a physics system using an emscripten compiled PhysX engine.
 
 If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
@@ -171,7 +171,7 @@ There are 3 types of supported rigid bodies. The type can be set by using the `t
 
 When the component is initialized, and on the `object3dset` event, all visible meshes that are descendents of this entity will have shapes created for them. Each individual mesh will have its own convex hull automatically generated for it. This means you can have reasonably accurate collision meshes both from building up shapes with a-frame geometry primitives, and from importing 3D models.
 
-Visible meshes can be excluded from this shape generation process by setting the `physx-no-collision` attribute on the corresponding `a-entity` element. Invisible meshes can be included into this shape generation process by settingt the `physx-hidden-collision` attribute on the corresponding `a-entity` element. This can be especially useful when using an external tool (like [Blender V-HACD](https://github.com/andyp123/blender_vhacd)) to create a low-poly convex collision mesh for a high-poly or concave mesh. This leads to this pattern for such cases:
+Visible meshes can be excluded from this shape generation process by setting the `physx-no-collision` attribute on the corresponding `a-entity` element. Invisible meshes can be included into this shape generation process by setting the `physx-hidden-collision` attribute on the corresponding `a-entity` element. This can be especially useful when using an external tool (like [Blender V-HACD](https://github.com/andyp123/blender_vhacd)) to create a low-poly convex collision mesh for a high-poly or concave mesh. This leads to this pattern for such cases:
 
 ```html
    <a-entity physx-body="type: dynamic">

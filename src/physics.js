@@ -263,7 +263,7 @@ const PhysXUtil = {
 
 let PhysX
 
-// Implements the a physics system using an emscripten compiled PhysX engine.
+// Implements a physics system using an emscripten compiled PhysX engine.
 //
 //
 // If `autoLoad` is `true`, or when you call `startPhysX`, the `physx` system will
@@ -890,7 +890,7 @@ AFRAME.registerComponent('physx-material', {
 // Visible meshes can be excluded from this shape generation process by setting
 // the `physx-no-collision` attribute on the corresponding `a-entity` element.
 // Invisible meshes can be included into this shape generation process by
-// settingt the `physx-hidden-collision` attribute on the corresponding
+// setting the `physx-hidden-collision` attribute on the corresponding
 // `a-entity` element. This can be especially useful when using an external tool
 // (like [Blender V-HACD](https://github.com/andyp123/blender_vhacd)) to create
 // a low-poly convex collision mesh for a high-poly or concave mesh. This leads
