@@ -64,7 +64,8 @@ AFRAME.registerComponent('physx-grab', {
   },
 
   onHit: function (evt) {
-    var hitEl = evt.detail.otherComponent.el;
+    var hitEl = evt.detail.otherComponent?.el;
+    if (hitEl && hitEl.components['physx-body'].data.type === 'static') return;
     // If the element is already grabbed (it could be grabbed by another controller).
     // If the hand is not grabbing the element does not stick.
     // If we're already grabbing something you can't grab again.
