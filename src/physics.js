@@ -743,9 +743,9 @@ AFRAME.registerSystem('physx', {
     for (let [obj, body] of this.objects)
     {
         // no updates needed for static and kinematic objects.
-        if (obj.el.components['physx-body'].data.type === 'static') continue;
-        if (obj.el.components['physx-body'].data.type === 'kinematic') continue;
-        if (obj.el.components['physx-body'].isKinematic) continue;
+        const bodyComponent = obj.el.components['physx-body'];
+        const bodyType = bodyComponent.data.type;
+        if (bodyType === 'static' || bodyType === 'kinematic' || bodyComponent.isKinematic) continue;
 
         const transform = body.getGlobalPose()
         this.worldHelper.position.copy(transform.translation);
