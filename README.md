@@ -25,8 +25,8 @@ You can either download the module from the `dist` directory of this repo and th
 Or you can download via JSDelivr CDN (specifying the version number you want to use)
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@v0.2.x/dist/physx.min.js"></script>
-<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.2.x/wasm/physx.release.wasm">
+<script src="https://cdn.jsdelivr.net/gh/c-frame/physx@v0.3.x/dist/physx.min.js"></script>
+<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.3.x/wasm/physx.release.wasm">
 ```
 
 ### Installation via npm
@@ -74,7 +74,7 @@ Implements a physics system using an emscripten compiled PhysX engine.
 If `autoLoad` is `true`, or when you call `startPhysX()`, the `physx` system will automatically load and initialize the physics system with reasonable defaults and a ground plane. All you have to do is add [`physx-body`](#component-physx-body) to the bodies that you want to be part of the simulation. The system will take try to take care of things like collision meshes, position updates, etc automatically. The simplest physics scene looks something like:
 
 ```html
-<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.2.x/wasm/physx.release.wasm">
+<a-scene physx="autoLoad: true; wasmUrl: https://cdn.jsdelivr.net/gh/c-frame/physx@v0.3.x/wasm/physx.release.wasm">
  <a-assets><a-asset-item id="#mymodel" src="..."></a-asset-item></a-assets>
 
  <a-box physx-body="type: static" color="green" position="0 0 -3"></a-box>
